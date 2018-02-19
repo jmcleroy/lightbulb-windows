@@ -185,3 +185,6 @@
 - name: Update git to credential timeout after 1 day
   command: git config --global credential.helper 'cache --timeout=86400'
 
+- include_tasks: setup.yml
+  
+

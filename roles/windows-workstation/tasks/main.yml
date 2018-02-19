@@ -16,6 +16,10 @@
     - git
     - putty.install
     - firefox
+    - googlechrome
+    - winscp
+    - cygwin
+    - cyg-get
     #- putty
     #- atom
     #- notepadplusplus.install

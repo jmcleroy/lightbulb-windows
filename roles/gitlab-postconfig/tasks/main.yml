@@ -12,7 +12,6 @@
   debug: msg="https://gitlab.{{ dns_domain_name }}/{{user_prefix}}{{item}}/ansible-playbooks"
   with_sequence: count="{{ user_count }}"
 
-
 #- name: GitLab Post | Set root user password 
 #  shell: > 
 #    echo "user = User.where(id: 1).first
@@ -44,9 +43,9 @@
     path: /root/set_root_pw.sh
     state: absent
 
-#- name: sleep 1 minute to allow root to initialize after password set
-#  pause: 
-#    minutes: 1
+- name: sleep 2 minute to allow root to initialize after password set
+  pause: 
+    minutes: 2
 
 ### Gitlab workaround
 ### Users are not populated from AD until login from Web UI 

@@ -1,7 +1,9 @@
 <powershell>
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile ConfigureRemotingForAnsible.ps1
-ConfigureRemotingForAnsible.ps1
+net stop wuauserv
+sc config wuauserv start= disabled
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update" /v NoAutoUpdate /t REG_DWORD /d 1 /f net stop wuauserv
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\ConfigureRemotingForAnsible.ps1
 Rename-Computer -NewName {{ 's' + item + 'win1' }} 
+C:\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
 Restart-Computer
 </powershell>
-

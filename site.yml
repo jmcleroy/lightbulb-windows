@@ -1,4 +1,3 @@
-# Playbook for Ansible Windows workshop setup.  
 ---
 - name: Provision Instances
   hosts: localhost
@@ -11,7 +10,6 @@
   - include_role:
       name: "manage-{{ instance_loc }}-instances"
  
-# Configure Active Directory 
 - name: Configure Active Directory Domain Controller
   hosts: windows_domain_controllers
   gather_facts: no
@@ -22,7 +20,6 @@
   roles:
     - windows-ad-controller
 
-# Configure Workstation host 
 - name: Configure Windows Workstation
   hosts: windows_workstations
   vars_files:
@@ -34,7 +31,6 @@
     - windows-common
     - windows-workstation
 
-# Configure Tower host
 - name: Configure Ansible Host 
   hosts: tower
   become: True
@@ -48,7 +44,6 @@
     - linux-common
     - ansible-tower
 
-# Configure Windows Hosts
 - name: Configure Windows Servers
   hosts: windows
   gather_facts: True
@@ -59,7 +54,6 @@
   roles: 
     - windows-common
 
-# Configure GitLab Host
 - name: Configure GitLab Host
   hosts: gitlab
   become: True
