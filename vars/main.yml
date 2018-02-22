@@ -11,10 +11,10 @@ pgpass: awx
 rabbitpass: tower
 
 # Where to provision instances
-instance_loc: vmware
+instance_loc: ec2
 
 # Overrides for manage-ec2-instances role
-keypair: "jconner-keypair"
+keypair: "mykeypair"
 vpc_id: "vpc-########"
 vpc_subnet_id: "subnet-########"
 region: "us-east-1"
@@ -86,8 +86,6 @@ gitlab_version: "10.0.6-ce.0.el7"
    # Email configuration.
 gitlab_email_enabled: "false"
 gitlab_smtp_enable: "false"
-
-
 
 
 ##### DELETE
