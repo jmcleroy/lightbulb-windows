@@ -20,10 +20,19 @@
     - winscp
     - cygwin
     - cyg-get
-    #- putty
     #- atom
     #- notepadplusplus.install
     #- sublimetext3
+
+- name: Install extra Cygwin Modules
+  win_command: cyg-get.bat curl cygwin32-gcc-g++ gcc-core gcc-g++ git libffi-devel make nano openssl openssl-devel python-crypto python2 python2-devel python2-openssl python2-pip python2-setuptools python-pywinrm tree
+  args:
+    chdir: C:\ProgramData\chocolatey\bin\
+
+- name: Install Ansible
+  win_command: bash.exe -l -c "pip2 install ansible"
+  args:
+    chdir: c:\tools\cygwin\bin\
 
 - name: Add Putty Shortcut to administrator desktop
   win_shortcut:
