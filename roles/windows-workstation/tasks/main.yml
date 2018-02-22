@@ -34,6 +34,21 @@
   args:
     chdir: c:\tools\cygwin\bin\
 
+- name: Create Ansible Config directory
+  win_file:
+    path: C:\tools\cygwin\etc\ansible
+    state: directory
+
+- name: Copy Ansible Config file
+  win_copy:
+    src: files/ansbile.cfg
+    dest: C:\tools\cygwin\etc\ansible\ansible.cfg
+
+- name: Copy sshpass.exe to workstation
+  win_copy:
+    src: files/sshpass.exe
+    dest: C:\tools\cygwin\bin\sshpass.exe
+
 - name: Add Putty Shortcut to administrator desktop
   win_shortcut:
     description: PuTTY
