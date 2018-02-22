@@ -1,4 +1,8 @@
 ---
+- name: Sleep 5 minutes before attempting to install... sigh...
+  pause:
+    minutes: 5
+
 - name: Install AD-Domain-Services
   win_feature:
     name: AD-Domain-Services
@@ -19,7 +23,7 @@
 #- name: Install AD-Certificate
 #  win_feature:
 #    name: AD-Certificate
-#    state: absent
+#    state: present
 #    include_management_tools: True
 #    include_sub_features: True
 #  register: wincertfeature
@@ -133,7 +137,7 @@
   win_reboot:
   when: windc.reboot_required
 
-- name: Sleep 60 seconds before adding windows group... sigh...
+- name: Sleep 180 seconds before adding windows group... sigh...
   pause:
     minutes: 3
   when: windc.changed
