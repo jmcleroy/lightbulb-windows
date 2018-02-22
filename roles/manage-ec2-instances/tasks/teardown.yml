@@ -10,9 +10,6 @@
   with_sequence: count={{ user_count }}
   register: ec2_tower_instances
 
-- debug:
-    var: ec2_tower_instances
-
 - name: Terminate Tower Instances
   ec2:
     region: "{{ region }}"
@@ -39,9 +36,6 @@
       vpc-id: "{{ vpc_id }}"
       "tag:Name": "{{ ec2_name_prefix }}-gitlab"
   register: ec2_gitlab_instances
-
-- debug:
-    var: ec2_gitlab_instances
 
 - name: Terminate Gitlab Instances
   ec2:
@@ -70,9 +64,6 @@
       "tag:Name": "{{ ec2_name_prefix }}-windc"
   register: ec2_dc_instances
 
-- debug:
-    var: ec2_dc_instances
-
 - name: Terminate DC Instances
   ec2:
     region: "{{ region }}"
@@ -99,9 +90,6 @@
       "tag:Name": "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
   with_sequence: count={{user_count}}
   register: ec2_windows_instances
-
-- debug:
-    var: ec2_windows_instances
 
 - name: Terminate Windows Instances
   ec2:
@@ -130,9 +118,6 @@
       "tag:Name": "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
   with_sequence: count={{user_count}}
   register: ec2_workstation_instances
-
-- debug:
-    var: ec2_workstation_instances
 
 - name: Terminate Workstation Instances
   ec2:
