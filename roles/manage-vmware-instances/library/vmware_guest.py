@@ -2007,7 +2007,7 @@ def main():
         linked_clone=dict(type='bool', default=False),
         networks=dict(type='list', default=[]),
         resource_pool=dict(type='str'),
-        customization=dict(type='dict', default={}, no_log=True),
+        customization=dict(type='dict', default={}),
         vapp_properties=dict(type='list', default=[]),
     )
 
