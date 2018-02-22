@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: no
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags: 
     - manage-instances
   tasks:
@@ -14,7 +14,7 @@
   hosts: windows_domain_controllers
   gather_facts: no
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags: 
     - windows-ad-controller
   roles:
@@ -22,9 +22,9 @@
 
 - name: Configure Windows Workstation
   hosts: windows_workstations
-  vars_files:
-    - vars/main.yml
   gather_facts: True
+  vars_files:
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
     - windows-workstation
   roles:
@@ -37,7 +37,7 @@
   remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
     - ansible-tower
   roles: 
@@ -48,7 +48,7 @@
   hosts: windows
   gather_facts: True
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags: 
     - windows_hosts
   roles: 
@@ -60,7 +60,7 @@
   remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
     - gitlab
   roles:
@@ -74,7 +74,7 @@
   remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
-    - vars/main.yml
+    - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
     - gitlab
   roles:
