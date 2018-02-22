@@ -2,3 +2,4 @@
 *.log
 instructor_inventory.txt
 *-instances.txt
+vars/custom.yml
