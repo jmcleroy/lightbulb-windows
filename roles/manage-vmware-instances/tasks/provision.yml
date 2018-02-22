@@ -1,4 +1,4 @@
-################### Domain Controller ###################
+################### Build Instances ###################
 
 - name: DomainController | Launch Domain Controller Instance 
   vmware_guest:
@@ -31,33 +31,12 @@
       - powershell.exe -ExecutionPolicy Unrestricted -File C:\ConfigureWinRM.ps1 -ForceNewSSLCert -EnableCredSSP
       - winrm set winrm/config/service/auth @{Basic="true"}
       - winrm set winrm/config/service @{AllowUnencrypted="true"}
-  register: ec2dc
+  with_sequence: count=1
+  register: dc_jobs
+  async: 7200
+  poll: 0
 
-- name: DomainController | Wait for WinRM to come up
-  wait_for:
-    host: "{{ ec2dc.instance.ipv4 }}"
-    port: 5986
-    delay: 60
-    timeout: 600
-    state: started
-
-- name: DomainController | Add new instance to host group
-  add_host:
-    hostname: "windc"
-    ansible_host: "{{ ec2dc.instance.ipv4  }}"
-    ansible_port: 5986
-    ansible_user: "Administrator"
-    ansible_password: "{{ domain_admin_password }}"
-    ansible_connection: "winrm"
-    private_ip: "{{ ec2dc.instance.ipv4 }}"
-    ansible_winrm_transport: "basic"
-    ansible_winrm_server_cert_validation: "ignore"
-    groups: windows_domain_controllers
-
-
-################### GITLAB ###################
-
-- name: Launch Gitlab Instance 
+- name: GitLab | Launch Gitlab Instance 
   vmware_guest:
     hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
@@ -77,30 +56,12 @@
       type: dhcp
     customization:
       hostname: gitlab
-  register: ec2gitlab
+  with_sequence: count=1
+  register: gitlab_jobs
+  async: 7200
+  poll: 0
 
-- name: GitLab | Wait for SSH to come up
-  wait_for:
-    host: "{{ ec2gitlab.instance.ipv4 }}"
-    port: 22
-    delay: 1
-    timeout: 320
-    state: started
-
-- name: GitLab | Add new instance to host group  
-  add_host:  
-    hostname: "gitlab"  
-    ansible_ssh_host: "{{ ec2gitlab.instance.ipv4 }}"  
-    ansible_host: "{{ ec2gitlab.instance.ipv4 }}"  
-    private_ip: "{{ ec2gitlab.instance.ipv4 }}"
-    ansible_user: "{{ root_user }}"
-    ansible_password: "{{ root_password }}"
-    groups: gitlab
-
-
-################### TOWER ###################
-
-- name: Launch Tower Instance 
+- name: Tower | Launch Tower Instance 
   vmware_guest:
     hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
@@ -124,36 +85,6 @@
   register: tower_jobs
   async: 7200
   poll: 0
-
-- name: Wait for tower instance creation to complete
-  async_status: jid="{{ item.ansible_job_id }}"
-  register: tower_instances
-  until: tower_instances.finished
-  retries: 300
-  with_items: "{{ tower_jobs.results }}"
-
-- name: Tower | Add new instance to host group  
-  add_host:  
-    hostname: "{{ item.hw_name|replace(ec2_name_prefix + '-', '') }}"  
-    ansible_ssh_host: "{{ item.ipv4 }}"
-    ansible_host: "{{ item.ipv4 }}"
-    private_ip: "{{ item.ipv4 }}"
-    ansible_user: "{{ root_user }}"
-    ansible_password: "{{ root_password }}"
-    groups: tower
-  with_items: "{{ tower_instances.results | map(attribute='instance') | list }}"  
-
-- name: Tower | Wait for SSH to come up  
-  wait_for:  
-    host: "{{ item.ipv4 }}"  
-    port: 22  
-    delay: 1  
-    timeout: 320  
-    state: started  
-  with_items: "{{ tower_instances.results | map(attribute='instance') | list }}"  
-
-
-################### Instance 1 ###################
 
 - name: Windows | Launch instance 1
   vmware_guest:
@@ -190,40 +121,6 @@
   register: windows1_jobs
   async: 7200
   poll: 0
-
-- name: Wait for windows instance creation to complete
-  async_status: jid="{{ item.ansible_job_id }}"
-  register: windows_instances
-  until: windows_instances.finished
-  retries: 300
-  with_items: 
-    - "{{ windows1_jobs.results }}"
-
-- name: Windows | Wait for WinRM to come up
-  wait_for:
-    host: "{{ item.ipv4 }}"
-    port: 5986
-    delay: 1
-    timeout: 600
-    state: started
-  with_items: "{{ windows_instances.results | map(attribute='instance') | list }}"
-
-- name: Windows | Add new instance to host group
-  add_host:
-    hostname: "{{ item.hw_name|replace(ec2_name_prefix + '-', '') }}"  
-    ansible_host: "{{ item.ipv4  }}"
-    private_ip: "{{ item.ipv4 }}"
-    ansible_port: 5986
-    ansible_user: "Administrator"
-    ansible_password: "{{ domain_admin_password }}"
-    ansible_connection: "winrm"
-    ansible_winrm_transport: "basic"
-    ansible_winrm_server_cert_validation: "ignore"
-    groups: windows
-  with_items: "{{ windows_instances.results | map(attribute='instance') | list }}"
-
-
-################### Workstation ###################
 
 - name: Workstation | Launch instance 1
   vmware_guest:
@@ -263,13 +160,132 @@
   async: 7200
   poll: 0
 
-- name: Workstation | Wait for windows instance creation to complete
+###################  Wait for jobs to complete ###################
+
+- name: Wait for DC instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: dc_instances
+  until: dc_instances.finished
+  retries: 300
+  with_items: "{{ dc_jobs.results }}"
+
+- name: Wait for Gitlab instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: gitlab_instances
+  until: gitlab_instances.finished
+  retries: 300
+  with_items: "{{ gitlab_jobs.results }}"
+
+- name: Wait for tower instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: tower_instances
+  until: tower_instances.finished
+  retries: 300
+  with_items: "{{ tower_jobs.results }}"
+
+- name: Wait for windows instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: windows_instances
+  until: windows_instances.finished
+  retries: 300
+  with_items: 
+    - "{{ windows1_jobs.results }}"
+
+- name: Wait for Workstation instance creation to complete
   async_status: jid="{{ item.ansible_job_id }}"
   register: workstation_instances
   until: workstation_instances.finished
   retries: 300
   with_items: 
     - "{{ workstation_jobs.results }}"
+
+################### Wait for Instances to completely come up ###################
+
+- name: DomainController | Wait for WinRM to come up
+  wait_for:
+    host: "{{ item.ipv4 }}"
+    port: 5986
+    delay: 60
+    timeout: 600
+    state: started
+  with_items: "{{ dc_instances.results | map(attribute='instance') | list }}"
+
+- name: DomainController | Add new instance to host group
+  add_host:
+    hostname: "windc"
+    ansible_host: "{{ item.ipv4  }}"
+    ansible_port: 5986
+    ansible_user: "Administrator"
+    ansible_password: "{{ domain_admin_password }}"
+    ansible_connection: "winrm"
+    private_ip: "{{ item.ipv4 }}"
+    ansible_winrm_transport: "basic"
+    ansible_winrm_server_cert_validation: "ignore"
+    groups: windows_domain_controllers
+  with_items: "{{ dc_instances.results | map(attribute='instance') | list }}"
+
+- name: GitLab | Wait for SSH to come up
+  wait_for:
+    host: "{{ item.ipv4 }}"
+    port: 22
+    delay: 1
+    timeout: 320
+    state: started
+  with_items: "{{ gitlab_instances.results | map(attribute='instance') | list }}"
+
+- name: GitLab | Add new instance to host group  
+  add_host:  
+    hostname: "gitlab"  
+    ansible_ssh_host: "{{ item.ipv4 }}"  
+    ansible_host: "{{ item.ipv4 }}"  
+    private_ip: "{{ item.ipv4 }}"
+    ansible_user: "{{ root_user }}"
+    ansible_password: "{{ root_password }}"
+    groups: gitlab
+  with_items: "{{ gitlab_instances.results | map(attribute='instance') | list }}"
+
+- name: Tower | Wait for SSH to come up  
+  wait_for:  
+    host: "{{ item.ipv4 }}"  
+    port: 22  
+    delay: 1  
+    timeout: 320  
+    state: started  
+  with_items: "{{ tower_instances.results | map(attribute='instance') | list }}"  
+
+- name: Tower | Add new instance to host group  
+  add_host:  
+    hostname: "{{ item.hw_name|replace(ec2_name_prefix + '-', '') }}"  
+    ansible_ssh_host: "{{ item.ipv4 }}"
+    ansible_host: "{{ item.ipv4 }}"
+    private_ip: "{{ item.ipv4 }}"
+    ansible_user: "{{ root_user }}"
+    ansible_password: "{{ root_password }}"
+    groups: tower
+  with_items: "{{ tower_instances.results | map(attribute='instance') | list }}"  
+
+- name: Windows | Wait for WinRM to come up
+  wait_for:
+    host: "{{ item.ipv4 }}"
+    port: 5986
+    delay: 1
+    timeout: 600
+    state: started
+  with_items: "{{ windows_instances.results | map(attribute='instance') | list }}"
+
+- name: Windows | Add new instance to host group
+  add_host:
+    hostname: "{{ item.hw_name|replace(ec2_name_prefix + '-', '') }}"  
+    ansible_host: "{{ item.ipv4  }}"
+    private_ip: "{{ item.ipv4 }}"
+    ansible_port: 5986
+    ansible_user: "Administrator"
+    ansible_password: "{{ domain_admin_password }}"
+    ansible_connection: "winrm"
+    ansible_winrm_transport: "basic"
+    ansible_winrm_server_cert_validation: "ignore"
+    groups: windows
+  with_items: "{{ windows_instances.results | map(attribute='instance') | list }}"
 
 - name: Workstation | Wait for WinRM to come up
   wait_for:
@@ -293,7 +309,6 @@
     ansible_winrm_server_cert_validation: "ignore"
     groups: windows_workstations
   with_items: "{{ workstation_instances.results | map(attribute='instance') | list }}"
-
 
 ################### Inventory ###################
 
