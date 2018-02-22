@@ -3,10 +3,11 @@
   gather_facts: no
   vars_files:
     - vars/main.yml
-
+  vars:
+    teardown: true
   tasks:
   - include_role:
-      name: "teardown-{{ instance_loc }}-instances"
+      name: "manage-{{ instance_loc }}-instances"
 
   post_tasks:
     - name: Remove inventory files
