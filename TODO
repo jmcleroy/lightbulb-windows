@@ -10,8 +10,6 @@ Add to exercise 1.1 (and anywhere else we're committing yaml)
 
 * Update network design so workstation is the single point of entry.  All other IPs could then be on private subnet.  
 
-* Test deploying 2 students and make certain the inventory is only the student's specific hosts.  I have a feeling it will include ALL students, but need to test.. 
-
 * Pre-install tower and leave the lab for reference? 
   * Note - Expectation is we follow the Tower lab for it's install/overview
   * Need to update the job template lab to be specific to our Windows example 
