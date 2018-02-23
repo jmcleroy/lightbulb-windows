@@ -1,7 +1,7 @@
 ---
 - name: Sleep 5 minutes before attempting to install... sigh...
   pause:
-    minutes: 5
+    minutes: 3
 
 - name: Install AD-Domain-Services
   win_feature:
