@@ -62,6 +62,16 @@
     validate_certs: False
   ignore_errors: True
 
+- name: Add LDAP Config
+  uri:
+    url: https://localhost/api/v2/settings/ldap/
+    method: PATCH
+    user: admin
+    password: "{{ towerpass }}"
+    body: "{{ lookup('template','ldap_conf.json.j2') }}"
+    body_format: json
+    validate_certs: False
+
 #- name: create project
 #  uri:
 #    url:  https://localhost/api/v1/projects/
