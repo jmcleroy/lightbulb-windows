@@ -1,5 +1,5 @@
 ---
-- name: Sleep 5 minutes before attempting to install... sigh...
+- name: Sleep 3 minutes before attempting to install... sigh...
   pause:
     minutes: 3
 
