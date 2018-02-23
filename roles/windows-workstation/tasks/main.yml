@@ -16,7 +16,7 @@
     - git
     - putty.install
     - firefox
-    - googlechrome
+    #- googlechrome
     - winscp
     - cygwin
     - cyg-get
