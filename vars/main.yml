@@ -9,6 +9,7 @@ towerpass: "MyPassw0rd21"
 towerversion: 3.2.2
 pgpass: awx
 rabbitpass: tower
+tower_ldap_search_dn: "CN=Users,DC=ansibleworkshop,DC=com"
 
 # Where to provision instances
 instance_loc: ec2
