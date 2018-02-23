@@ -3,3 +3,4 @@
 instructor_inventory.txt
 *-instances.txt
 vars/custom.yml
+roles/ansible-tower/files/tower_license.json
