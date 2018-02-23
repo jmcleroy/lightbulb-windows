@@ -41,7 +41,7 @@
 
 - name: Copy Ansible Config file
   win_copy:
-    src: files/ansbile.cfg
+    src: files/ansible.cfg
     dest: C:\tools\cygwin\etc\ansible\ansible.cfg
 
 - name: Copy sshpass.exe to workstation
