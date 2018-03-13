@@ -8,7 +8,7 @@ These ansible playbooks provision a lab on AWS for use in delivering a workshop 
 * Per-Student Infrastructure
   * An Ansible/Tower control node
   * A Windows Workstation for interacting with the environment
-  * A Windows Hosts for running playbooks against
+  * A set of Windows Hosts for running playbooks against
 
 These expect an existing VPC.  In addition, there is no tear-down playbook.  However, just terminating the EC2 instances clears the environment.  
 
@@ -133,11 +133,11 @@ It takes roughly 30 minutes to provision an environment for a single student.  I
 
 All inventories will be placed in your local directory executing the playbook.  There are student#-instances.txt for each student there.  Also, there is an instructor-inventory.txt.  The student inventory is also placed on their tower host as /etc/ansible/hosts
 
-== Connecting to the environment
+## Connecting to the environment
 
 The workshop has people connect through RDP to the workstation for their lab and then interact with other systems from there.  However, all systems are accessible publicly at the moment, so there is nothing stopping you from connecting directly.  Look in the student#-instances.txt and instructor_inventory.txt files for ip addresses, users, and passwords.
 
-== Building Docs 
+## Building Docs 
 
 I'm using asciidoc/asciidoctor.  I *think* I got these as follows: 
 ```
@@ -153,7 +153,7 @@ asciidoc -d book -v -o index.html index.adoc
 asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
 ```
 
-== Known Issues
+## Known Issues
 
 Currently there is an Insecure message with win_ping (and all other windows modules) from the Ansible Tower host, even though 'ansible_winrm_server_cert_validation=ignore' is set in the inventory.  It looks like the below issue, but I can't be certain.  In my testing I was not able to work around it.  It doesn't impact functionality, but does give a lot of warning messages.  If you want to avoid these, here's a hacky way to do it.  
 
