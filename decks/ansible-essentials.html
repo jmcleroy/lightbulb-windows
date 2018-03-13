@@ -50,7 +50,6 @@
             <li>What is Ansible and The Ansible Way</li>
             <li>Installing Ansible</li>
             <li>How Ansible Works and its Key Components</li>
-            <li>Ad-Hoc Commands</li>
             <li>Playbook Basics</li>
             <li>Reuse and Redistribution of Ansible Content with Roles</li>
           </ul>
@@ -150,7 +149,7 @@
               </div>
           </div>
           <aside notes="notes">
-            <p>Ansible Modules control the things that you’re automating. They can do everything from acting on system files, installing packages, or making API calls to a service framework. Ansible ships with over 1300 today -- and this number is always expanding with every release.</p>
+            <p>Ansible Modules control the things that you’re automating. They can do everything from acting on system files, installing packages, or making API calls to a service framework. Ansible ships with over 1500 today -- and this number is always expanding with every release.</p>
           </aside>
         </section>
         <section>
@@ -162,7 +161,7 @@
                 <ul>
                   <li>28,000+ stars &amp; 10,000+ forks on GitHub</li>
                   <li>3200+ GitHub Contributors</li>
-                  <li>Over 1300 modules shipped with Ansible</li>
+                  <li>Over 1500 modules shipped with Ansible</li>
                   <li>New contributors added every day</li>
                   <li>1200+ users on IRC channel</li>
                   <li>Top 10 open source projects in 2017</li>
@@ -181,60 +180,6 @@
         <aside class="notes">
           <p>Ansible is open source. Created with contributions from an active open source community and built for the people who use it every day. At its heart, Ansible was made to help more people experience the power of automation so they could work better and faster together.</p>
         </aside>
-        </section>
-        <section>
-          <h2>Complete Automation</h2>
-          <img src="images/ansible-automation-diagram.svg"/>
-          <aside class="notes">
-            <p>Ansible is complete automation. It&apos;s not just configuration management, It&apos;s provisioning infrastructure, deploying applications, and orchestrating actions against all layers of IT infrastructure in a single tool.</p>
-            <p>Ansible's capabilities allow you to orchestrate the entire application and environment lifecycle, regardless of where It&apos;s deployed.</p>
-          </aside>
-        </section>
-        <section>
-          <h2>Use Cases</h2>
-          <img src="images/ansible-use-case-diagram.svg" />
-          <aside class="notes">
-            <p>What can you do with Ansible? Nearly anything. Ansible is the Swiss Army knife of DevOps, capable of handling many powerful automation tasks with the flexibility to adapt to many environments and workflows.</p>
-            <p>Many folks like to categorize Ansible as a configuration manager, and although yes, Ansible can do that, it&quot;s just the tip of the iceberg. When you couple configuration management with orchestration, you can start to model complicated multi-tier deployments with ease.</p>
-            <p>With Ansible, once someone on your team automates something, everyone on the team now knows how to do it.</p>
-          </aside>
-        </section>
-        <section>
-          <h2>Installing Ansible</h2>
-          <pre class="language-yaml"><code>
-# the most common and preferred way of
-# installation
-$ sudo pip install ansible
-
-# you will need the extras repo configured on
-# CentOS, RHEL, or Scientific Linux
-$ sudo yum install ansible
-
-# you will need the PPA repo configured on
-# Debian or Ubuntu
-$ sudo apt-get install ansible
-          </code></pre>
-          <aside class="notes">
-            <p>As open source, Ansible is freely-available thru numerous means and can be installed in minutes with only a few requirements that most system already have. The installation methods listed here are the most commonly used.</p>
-            <p>Currently Ansible can be run from any machine with Python 2.6 or 2.7 installed. Python 3 support is in tech preview as of version 2.2. Windows isn't supported for the control machine.</p>
-            <p>The requirements of nodes being managed by Ansible vary based on the type and access used to work with them. Ansible needs a way to communicate, which is normally ssh or winrm though other means such as RESTful APIs and specialized connection types may be necessary. Linux servers will need Python 2.6 or later. Windows serves need PowerShell 3.</p>
-            <p>For more details see <a href="http://docs.ansible.com/ansible/intro_installation.html">the Installation page</a> in the Ansible documentation.
-          </aside>
-        </section>
-        <section>
-          <section data-state="title alt">
-          <h1>Demo Time: <br/>Installing Ansible</h1>
-          <aside class="notes">
-            <p>To demonstrate how easy it is to install Ansible, open an SSH session to your control host and install Ansible using one of the methods in the previous slide. Once complete do a <code>$ ansible --version</code>.</p>
-          </aside>
-          </section>
-          <section data-state="title alt">
-            <h1>Workshop: <br/>Installing Ansible</h1>
-            <aside class="notes">
-              <p>This brief exercise demonstrates how easy it can be to install and configure Ansible and begin automating.</p>
-              <p>See <code>workshops/ansible_install</code> in the Ansible Lightbulb repo for this workshop&apos;s assignment. It's solution and addition details can be found in <code>facilitator/solutions/ansible_install.md</code>.</p>
-            </aside>
-          </section>
         </section>
         <section>
           <h2>How Ansible Works</h2>
@@ -301,24 +246,24 @@ $ sudo apt-get install ansible
           <div class="columns">
             <div class="col">
               <ul>
-                <li>apt/yum</li>
-                <li>copy</li>
-                <li>file</li>
-                <li>get_url</li>
-                <li>git</li>
-                <li>ping</li>
-                <li>debug</li>
+                <li>win_chocolatey</li>
+                <li>win_copy</li>
+                <li>win_domain</li>
+                <li>win_dsc</li>
+                <li>win_file</li>
+                <li>win_firewall</li>
+                <li>win_group</li>
               </ul>
             </div>
             <div class="col">
               <ul>
-                <li>service</li>
-                <li>synchronize</li>
-                <li>template</li>
-                <li>uri</li>
-                <li>user</li>
-                <li>wait_for</li>
-                <li>assert</li>
+                <li>win_package</li>
+                <li>win_psmodule</li>
+                <li>win_reboot</li>
+                <li>win_service</li>
+                <li>win_template</li>
+                <li>win_user</li>
+                <li>win_updates</li>
               </ul>
             </div>
               <div class="col">
@@ -346,40 +291,13 @@ $ sudo apt-get install ansible
           </aside>
         </section>
         <section>
-          <h2>Modules Documentation</h2>
-          <pre class="language-yaml"><code>
-# List out all modules installed
-$ ansible-doc -l
-...
-copy
-cron
-...
-
-# Read documentation for installed module
-$ ansible-doc copy
-> COPY
-
-  The [copy] module copies a file on the local box to remote locations. Use the [fetch] module to copy files from remote locations to the local
-  box. If you need variable interpolation in copied files, use the [template] module.
-
-  * note: This module has a corresponding action plugin.
-
-Options (= is mandatory):
-...
-          </code></pre>
-        </section>
-        <aside class="notes">
-          <p>Module documentation is also available from the commandline using the <code>ansible-doc</code>.</p>
-          <p>One noteworthy advantage, of ansible-doc is that it can display any custom module with it's own embedded documentation that you may have added to your Ansible environment.</p>
-        </aside>
-        <section>
           <h2>Modules: Run Commands</h2>
           <p>If Ansible doesn't have a module that suits your needs there are the “run command” modules:</p><br>
           <ul>
-            <li><b>command</b>: Takes the command and executes it on the host. The most secure and predictable.</li>
-            <li><b>shell</b>: Executes through a shell like <code>/bin/sh</code> so you can use pipes etc. Be careful.</li>
+            <li><b>win_command</b>: Takes the command, sanitizes it, and executes it on the host. The most secure and predictable.</li>
+            <li><b>win_shell</b>: Executes through a shell like <code>powershell.exe</code> so you can use pipes etc. Be careful.</li>
             <li><b>script</b>: Runs a local script on a remote node after transferring it.</li>
-            <li><b>raw</b>: Executes a command  without going through the Ansible module subsystem.</li>
+            <li><b>raw</b>: Executes a command without going through the Ansible module subsystem.</li>
           </ul>
           <p><br><b>NOTE:</b> Unlike standard modules, run commands have no concept of desired state and should only be used as a last resort.</p>
           <aside class="notes">
@@ -450,53 +368,229 @@ ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
             <p>This example just covers the basics. There's a lot more to inventory that is not covered here. See the <a href="http://docs.ansible.com/ansible/intro_inventory.html">Ansible inventory documentation</a> for more details.</p>
           </aside>
         </section>
-        <section>
+
+
+        <section data-state="cover">
+            <p class="ans-logo"><img src="images/ansible-wordmark-white.svg" width="260" alt="" /></p>
+            <h1>Introduction to Ansible Tower</h1>
+            <!--p>NAME HERE, TITLE HERE</p>
+            <p>COMPANY HERE</p-->
+        </section>
           <section>
-            <h2>Ad-Hoc Commands</h2>
-            <p>An ad-hoc command is a single Ansible task to perform quickly, but don’t want to save for later.</p>
+              <h2>What is Ansible Tower?</h2>
+              <p>Ansible Tower is an <strong>enterprise framework</strong> for controlling, securing and managing your Ansible automation – with a <strong>UI and RESTful API</strong></p><br>
+              <ul>
+                <li><strong>Role-based access control</strong> keeps environments secure, and teams efficient</li>
+                <li>Non-privileged users can <strong>safely deploy</strong> entire applications with <strong>push-button deployment</strong> access</li>
+                <li>All Ansible automations are <strong>centrally logged</strong>, ensuring <strong>complete auditability and compliance</strong></li>
+              </ul>
+              <aside class="notes">
+                <p>Red Hat Ansible Tower offers the control around Ansible automations in the form of RBAC, Job Scheduling, security abstraction from the user and API integrations with other systems.</p>
+                <p>In Ansible Tower, all Ansible job launches are tracked and logged centrally. What was changed and when it was changed can be viewed, exported to other logging capabilities and controlled within allowances of a user's access based on role.</p>
+              </aisde>
+          </section>
+          <section>
+            <img src="images/ansible-tower-platform-diagram.svg">
             <aside class="notes">
-              <p>Ansible ad-hoc commands is a good place to start to understand the basics of what Ansible can do before learning how to use playbooks &ndash; ad-hoc commands can also be used to do quick things that you might not necessarily want to write a full playbook for.</p>
-              <p>Generally speaking, the true power of Ansible lies in playbooks. So why would you use ad-hoc tasks versus playbooks?</p>
-              <p>For instance, if you wanted to restart a service on all of your lab nodes, you could execute a quick one-liner in Ansible without writing a playbook.</p>
+              <p>Ansible Core brought you simple and powerful automation, Ansible Tower provides a visual interface to scale out that power. Run jobs against multiple inventories at the same time and schedule jobs to run when you want them too.</p>
+              <p>With Core, everyone has their own playbooks stored locally or in their own SCM tool. With Ansible Tower, everyone's playbooks can be centralized to one location. Control what teams can see what with RBAC to resources and projects.</p>
+              <p>Launch playbooks with the click of a button and see the expected results for that same job to compare and confirm the desired outcome.
             </aside>
           </section>
           <section>
-            <h2>Ad-Hoc Commands: Common Options</h2>
-            <ul style="font-size: 0.75em;">
-              <li><b>-m MODULE_NAME, --module-name=MODULE_NAME</b><br/>Module name to execute the ad-hoc command</li>
-              <li><b>-a MODULE_ARGS, --args=MODULE_ARGS</b><br/>Module arguments for the ad-hoc command</li>
-              <li><b>-b, --become</b><br/>Run ad-hoc command with elevated rights such as sudo, the default method</li>
-              <li><b>-e EXTRA_VARS, --extra-vars=EXTRA_VARS</b><br/>Set additional variables as key=value or YAML/JSON</li>
-              <li><b>--version</b><br/>Display the version of Ansible</li>
-              <li><b>--help</b><br/>Display the MAN page for the Ansible tool</li>
+            <h2>Platform Overview</h2>
+            <img src="images/ansible-platform-overview.svg"/>
+            <aside class="notes">
+              <p>
+            </aside>
+          </section>
+          <section>
+            <h2>Server Requirements</h2>
+            <ul>
+              <li>Red Hat Enterprise Linux (RHEL) 7 (and select derivatives), Ubuntu 14.04 64-bit, and Ubuntu 16.04 LTS 64-bit support required (kernel and runtime).</li>
+              <li>A currently supported version of Mozilla Firefox or Google Chrome.</li>
+              <li>2 GB RAM minimum (4+ GB RAM highly recommended)</li>
+              <li>20 GB of dedicated hard disk space</li>
             </ul>
             <aside class="notes">
-              <p>This slide shows essential command-line options for running ad-hoc commands that will be useful in our upcoming workshop assignment.</p>
+              <p>Unlike Ansible Core, Ansible Tower cannot be installed locally on your laptop, it must be installed in a server environment.</p>
+              <p>Other HTML5 compliant web browsers may work but are not fully tested or supported.</p>
+              <p>10 GB of the 20 GB requirement must be dedicated to /var/, where Ansible Tower stores its files and working directories (dedicating less space will cause the installation to fail)</p>
             </aside>
           </section>
-        </section>
-        <section>
-          <h2>Ad-Hoc Commands</h2>
-          <pre class="language-yaml"><code>
-# check all my inventory hosts are ready to be
-# managed by Ansible
-$ ansible all -m ping
-
-# collect and display the discovered facts
-# for the localhost
-$ ansible localhost -m setup
-
-# run the uptime command on all hosts in the
-# web group
-$ ansible web -m command -a &quot;uptime&quot;
-          </code></pre>
-          <aside class="notes">
-            <p>Ad-hoc commands are quick checks on your servers that you don’t want to preserve in an Ansible playbook.</p>
-            <p>An ad-hoc command can be used to do some tasks that you might not necessarily want to write a full playbook and save for later.</p>
-            <p>This is a good place to start to understand the basics of what Ansible can do prior to learning about playbooks where the true power of Ansible automation lies.</p>
-            <p>For more information see <a href="http://docs.ansible.com/ansible/intro_adhoc.html">Introduction To Ad-Hoc Commands</a>.</p>
+          <section>
+            <h2>Key Features of Ansible Tower</h2>
+              <ul>
+                <li>Dashboard and User Interface</li>
+                <li>User Base -- Organizations, Teams &amp; Users</li>
+                <li>Credentials</li>
+                <li>Inventories</li>
+                <li>Projects</li>
+                <li>Job Templates &amp; Jobs</li>
+                <li>Role Based Access Control (RBAC)</li>
+              </ul>
+            <aside class="notes">
+              <p>We now have Ansible Tower installed on a VM, but before we can get started with automating in Ansible Tower, we need to learn how some of the key features of it work.</p>
+              <p>Listed are some of the key features that we are going to be discussing in the coming slides. </p>
+            </aside>
+          </section>
+          <section>
+            <h2 style="text-align:center">Dashboard and User Interface</h2>
+            <div style="text-align: center;"><img src="images/ansible-tower3-monitor-1x.png"/></div>
+            <aside class="notes">
+              <p>The Ansible Tower dashboard provides a heads-up NOC-style display and a friendly graphical framework for your IT orchestration needs. Across the top-left side of the Ansible Tower Dashboard, administrators can quickly navigate to their Projects, Inventories, Job Templates, and Jobs.</p>
+              <p>Across the top-right side of this interface, administrators can access the tools they need to configure organizations, users, groups, and permissions as well as view related documentation, access portal mode, and log out.</p>
+            </aside>
+          </section>
+          <section>
+            <h2>User Base</h2><br>
+              <p>A <strong>user</strong> is an account to access Ansible Tower and its services given the permissions granted to it.</p>
+              <p>An <strong>organization</strong> is a logical collection of users, teams, projects, inventories and more. All entities belong to an organization with the exception of users.</p>
+              <p><strong>Teams</strong> provide a means to implement role-based access control schemes and delegate responsibilities across organizations.</p>
+              <aside class="notes">
+                <p>Users are individuals and can be added to teams and or organizations. There are 3 types of users: Normal User, System Auditor and System Administrator.</p>
+                <p>A normal user has read write access limited to the resources they are able to access.</p>
+                <p>A system auditor implicitly inherit the read-only capability for all objects within the Ansible Tower environment.</p>
+                <p>A system administrator (also known as Superuser) has admin, read, and write privileges over the entire Ansible Tower installation. A System Administrator is typically responsible for managing all aspects of Ansible Tower and delegating responsibilities for day-to-day work to various Users.
+                <p>An organization is is a logical collection of Users, Teams, Projects, and Inventories, and is the highest level in the Ansible Tower object hierarchy.</p>
+                <p>A Team is a subdivision of an organization with associated users, projects, credentials, and permissions. Teams provide a means to implement role-based access control schemes and delegate responsibilities across organizations. </p>
+                <p>The user-base plays an important part in implementing role-based access control schemes across your organization.</p>
+              </aside>
+          </section>
+          <section>
+            <h2>Credentials</h2>
+            <p>Credentials are utilized by Ansible Tower for authentication with various external resources:</p>
+            <ul>
+              <li>Connecting to <strong>remote machines</strong> to run jobs</li>
+              <li>Syncing with <strong>inventory</strong> sources</li>
+              <li>Importing project content from <strong>version control systems</strong></li>
+              <li>Connecting to and managing <strong>networking devices</strong>
+            </ul>
+            <p>Centralized management of various credentials allows end users to leverage a  secret without ever exposing that secret to them.</p>
+            <aside class="notes">
+              <p>Credentials are utilized by Ansible Tower for authentication when launching Jobs against machines, synchronizing with inventory sources, and importing project content from a version control system.</p>
+              <p>Ansible Tower credentials are imported and stored encrypted in Ansible Tower, and are not retrievable in plain text on the command line by any user.</p>
+              <p>You can grant users and teams the ability to use these credentials, without actually exposing the credential to the user.</p>
+              <p>If you have a user move to a different team or leave the organization, you don’t have to re-key all of your systems just because that credential was available in Ansible Tower.</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Inventory</h2>
+            <p>Inventory is a collection of hosts (nodes) with associated data and groupings that Ansible Tower can connect to and manage.</p>
+            <ul>
+              <li>Hosts (nodes)</li>
+              <li>Groups</li>
+              <li>Inventory-specific data (variables)</li>
+              <li>Static or dynamic sources</li>
+            </ul>
+            <aside class="notes">
+            <p>Inventory is a collection of the hosts (nodes) with associated metadata and groupings that Ansible can connect and manage. An inventory source can be static files or dynamically retrieved from an external system.</p>
+            <p>In Ansible Tower, there are many features that you can take advantage of in regards to inventory. Groups, all be them not new in the Ansible space, are now more easily manipulated and created. Groups can be nested and this allows for you to copy or move the group to a different group.</p>
+            <p>You also have the ability in Ansible Tower to setup a dynamic inventory within Ansible Tower. We will talk more in depth about dynamic inventories here in a few minutes.</p>
           </aside>
+          </section>
+          <section>
+            <h2>Projects</h2>
+            <p>A Project is a logical collection of Ansible Playbooks, represented in Ansible Tower.</p>
+            <p>You can manage Playbooks and Playbook directories by placing them in a <strong>source code management system</strong> supported by Ansible Tower, including Git, Subversion, and Mercurial.</li>
+            <aside class="notes">
+              <p>As a refresher from the core presentation, a Project is a logical collection of Ansible playbooks. </p>
+              <p>In Ansible Tower, you can manage playbooks and playbook directories by either placing them manually under the Project Base Path on your Ansible Tower server, or by placing your playbooks into a source code management (SCM) system supported by Ansible Tower, including Git, Subversion, and Mercurial.</p>
+              <p>Managing your projects with a SCM is recommended to ensure that only those with assigned access to the repository can change the playbook before execution, and for the extra layer of accountability and change control it provides.</p>
+              <p>Within Ansible Tower, there are a few new things that you can do with your projects.</p>
+              <ul>
+                <li>Update: If configured for a particular project, you can invoke an immediate update to source control.</li>
+                <li>Schedule: If configured for a particular project , you can schedule an update from source control.</li>
+                <li>Permissions: Any project can have permissions added to it so only a specific set of users or teams can access it.</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <h2>Job Templates</h2>
+            <p>A job template is a definition and set of parameters for running an Ansible Playbook. <br><br>Job templates are useful to <strong>execute</strong> the same job many times and encourage the <strong>reuse</strong> of Ansible Playbook content and collaboration between teams.</p>
+            <aside class="notes">
+              <p>While the REST API allows for the execution of jobs directly, Ansible Tower requires that you first create a job template.</p>
+              <p>To create a job template, there are some things that are required. You will need to have:
+                <ul>
+                  <li>Name</li>
+                  <li>Job Type</li>
+                  <li>Inventory</li>
+                  <li>Project</li>
+                  <li>Playbook</li>
+                  <li>Credentials (a machine credential is always required but depending on what you are running against, other credentials might be needed)</li>
+                  <li>Verbosity Level (A level 0 is always selected by default but depending on the kind of output that is needed, you can select a level all the way up to 5)</li>
+                </ul>
+              <p>Those are required for a job template but their other options for you to cater each job template to your exact needs.</p>
+              <p>Due to time, we won't go to far into the weeds on some of the advanced configurations that you can do with Job Templates but there are some options that you can select to make life a little easier when running job templates.</p>
+              <p>Options such as Enable privilege escalation, enable provisioning callbacks and enable concurrent jobs.</p>
+               <ul>
+                  <li>Enable Privilege Escalation: If enabled, run this playbook as an administrator. This is the equivalent of passing the --become option to the ansible-playbook command.</li>
+                  <li>Allow Provisioning Callbacks: Enable a host to call back to Ansible Tower via the Ansible Tower API and invoke the launch of a job from this job template.</li>
+                  <li>Allow Provisioning Callbacks: Enable a host to call back to Ansible Tower via the Ansible Tower API and invoke the launch of a job from this job template.</li>
+            </aside>
+          </section>
+          <section>
+            <h2>Jobs</h2>
+            <p>A job is an instance of Ansible Tower launching an Ansible Playbook against an inventory of hosts.</p>
+              <ul>
+                <li>Job results can be easily viewed</li>
+                <li>View the standard out for a more in-depth look</li>
+              </ul>
+            <aside class="notes">
+              <p>The Jobs link displays a list of jobs and their status, shown as completed successfully or failed, or as an active (running) job.</p>
+              <p>Actions you can take against jobs include viewing the details and standard output of a particular job, relaunch jobs, or remove jobs.</p>
+              <p>Clicking on any type of job takes you to the Job Details View for that job, which consists of two sections:</p>
+                <ul>
+                  <li>Details: provides information and status about the job</li>
+                  <li>Standard Out: displays the job processes and output</li>
+                </ul>
+            </aside>
+          </section>
+          <section>
+            <h2>Role Based Access Control (RBAC)</h2>
+            <p>Role-Based Access Controls (RBAC) are built into Ansible Tower and allow administrators to <strong>delegate access</strong> to server inventories, organizations, and more. These controls allow Ansible Tower to help you <strong>increase security</strong> and <strong>streamline management</strong> of your Ansible automation.</p>
+            <aside class="notes">
+              <p>RBAC is at the core of how Ansible Tower scales organizations while increasing the security of automating.</p>
+              <p>By delegating access to resources within tower, you are removing an element of human error. Users can only view what they are permitted to see and can only run jobs against inventories that they are permitted to act against.</p>
+              <p>(increase security) </p>
+              <p>Streamline management</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Role Based Access Control (RBAC)</h2><br>
+            <img src="images/ansible-tower-rbac.svg">
+            <aside class="notes">
+              <p>Roles can be granted to individual users, teams and as well as to organizations.</p>
+              <p>Roles control access to projects, inventories and job templates in the form of permissions.</p>
+              <p>Tower security centers around role based access for users and teams.</p>
+              <p>Security can be applied granularly to Credentials, Inventories, Projects, Job Templates and API Access based on the user or team role.</p>
+          </section>
+
+          <section data-state="title alt">
+            <h1>Workshop: Lesson 1<br/>Configuring Tower</h1>
+          </section>
         </section>
+
+
+
+
+
+        <section>
+          <h2>Variables</h2>
+          <p>Ansible can work with metadata from various sources and manage their context in the form of variables.</p>
+          <ul>
+            <li>Command line parameters</li>
+            <li>Plays and tasks</li>
+            <li>Files</li>
+            <li>Inventory</li>
+            <li>Discovered facts</li>
+            <li>Roles</li>
+          </ul>
+        </section>
+        <aside class="notes">
+          <p>While automation exists to make it easier to make things repeatable, all of your systems are not exactly alike.</p>
+          <p>Variables are used to store metadata for each host drawing from numerous sources. For example variable may be for things like facts or file paths or package versions.</p>
+        </aside>
         <section>
           <h2>Sidebar: Discovered Facts</h2>
           <p>Facts are bits of information derived from examining a host systems that are stored as variables for later use in a play.</p>
@@ -522,43 +616,6 @@ localhost | success >> {
             <p>Ansible collects facts using the <code>setup</code> module. By default, Ansible will run the <code>setup</code> module before any other tasks are executed in a playbook. These facts can be referenced by subsequent automation tasks on a per host-basis during the playbook run.</p>
           </aside>
         </section>
-        <section>
-          <section data-state="title alt">
-            <h1>Demo Time: <br/>Ad-Hoc Commands</h1>
-            <aside class="notes">
-              <p>To demonstrate ad-hoc commands in action, open an SSH session to your control host and run the ad-hoc commands in the previous slides.</p>
-              <pre class="language-yaml"><code>
-$ ansible all -m ping
-$ ansible localhost -m setup
-$ ansible web -m command -a &quot;uptime&quot;
-              </code></pre>
-            </aside>
-          </section>
-          <section data-state="title alt">
-            <h1>Workshop: <br/>Ad-Hoc Commands</h1>
-            <aside class="notes">
-              <p>This brief exercise demonstrates Ansible in-action at it&apos;s most basic and simple level. Thru ad-hoc commands, students are exposed to Ansible modules and usage and will apply to their understanding of tasks and playbooks. This exercise also begins to expose students to the concepts of Ansible facts and inventory.</p>
-              <p>This workshop is also a good way to verify their lab environments are properly configured before going forward.</p>
-              <p>See <code>workshops/adhoc_commands</code> in the Ansible Lightbulb repo.</p>
-            </aside>
-          </section>
-        </section>
-        <section>
-          <h2>Variables</h2>
-          <p>Ansible can work with metadata from various sources and manage their context in the form of variables.</p>
-          <ul>
-            <li>Command line parameters</li>
-            <li>Plays and tasks</li>
-            <li>Files</li>
-            <li>Inventory</li>
-            <li>Discovered facts</li>
-            <li>Roles</li>
-          </ul>
-        </section>
-        <aside class="notes">
-          <p>While automation exists to make it easier to make things repeatable, all of your systems are not exactly alike.</p>
-          <p>Variables are used to store metadata for each host drawing from numerous sources. For example variable may be for things like facts or file paths or package versions.</p>
-        </aside>
         <section>
           <h2>Variable Precedence</h2>
           <p>The order in which the same variable from different sources will override each other.</p>
@@ -599,12 +656,12 @@ $ ansible web -m command -a &quot;uptime&quot;
           <h2>Tasks</h2>
           <p>Tasks are the application of a module to perform a specific unit of work.</p>
           <ul>
-            <li><b>file</b>: A directory should exist</li>
-            <li><b>yum</b>: A package should be installed</li>
-            <li><b>service</b>: A service should be running</li>
-            <li><b>template</b>: Render a configuration file from a template</li>
-            <li><b>get_url</b>: Fetch an archive file from a URL</li>
-            <li><b>git</b>: Clone a source code repository</li>
+            <li><b>win_file</b>: A directory should exist</li>
+            <li><b>win_package</b>: A package should be installed</li>
+            <li><b>win_service</b>: A service should be running</li>
+            <li><b>win_template</b>: Render a configuration file from a template</li>
+            <li><b>win_get_url</b>: Fetch an archive file from a URL</li>
+            <li><b>win_copy</b>: Copy a file from your repo or a remote source</li>
           </ul>
           <aside class="notes">
             <p>We've already reviewed modules, the batteries and tools Ansible provides. Tasks are the specific application of a module to perform a unit of automation.</p>
@@ -615,19 +672,19 @@ $ ansible web -m command -a &quot;uptime&quot;
           <h2>Example Tasks in a Play</h2>
           <pre class="language-yaml"><code>
 tasks:
-- name: Ensure httpd package is present
-  yum:
-    name: httpd
-    state: latest
+- name: Ensure IIS Server is present
+  win_feature:
+    name: Web-Server
+    state: present
 
 - name: Ensure latest index.html file is present
-  copy:
+  win_copy:
     src: files/index.html
-    dest: /var/www/html/
+    dest: c:\www\
 
-- name: Restart httpd
-  service:
-    name: httpd
+- name: Restart IIS
+  win_service:
+    name: IIS Admin Service
     state: restarted
           </code></pre>
           <aside class="notes">
@@ -654,21 +711,21 @@ tasks:
           <h2>Example Handler Task in a Play</h2>
           <pre class="language-yaml"><code data-noescape>
 tasks:
-- name: Ensure httpd package is present
-  yum:
-    name: httpd
-    state: latest
-  <mark>notify: restart httpd</mark>
+- name: Ensure IIS Server is present
+  win_feature:
+    name: Web-Server
+    state: present
+  <mark>notify: Restart IIS</mark>
 
 - name: Ensure latest index.html file is present
-  copy:
+  win_copy:
     src: files/index.html
-    dest: /var/www/html/
+    dest: c:\www\
 
 <mark>handlers:</mark>
-- name: Restart httpd
-  service:
-    name: httpd
+- name: Restart IIS
+  win_service:
+    name: IIS Admin Service
     state: restarted
           </code></pre>
           <aside class="notes">
@@ -686,30 +743,28 @@ tasks:
         </section>
         <section>
           <h2>Playbook Example</h2>
-          <pre class="language-yaml"><code data-noescape>
----
-- name: Ensure apache is installed and started
+          <pre class=""><code data-noescape>---
+- name: Ensure IIS is installed and started
   hosts: web
   become: yes
   vars:
-    http_port: 80
+    service_name: IIS Admin Service
 
   tasks:
-  - name: Ensure httpd package is present
-    yum:
-      name: httpd
-      state: latest
+  - name: Ensure IIS Server is present
+    win_feature:
+      name: Web-Server
+      state: present
 
   - name: Ensure latest index.html file is present
-    copy:
+    win_copy:
       src: files/index.html
-      dest: /var/www/html/
+      dest: c:\www\
 
-  - name: Ensure httpd is started
-    service:
-      name: httpd
-      state: started
-          </code></pre>
+  - name: Ensure IIS is started
+    win_service:
+      name: "{{ server_name }}"
+      state: started</code></pre>
           <aside class="notes">
             <p>Here we can see an example of a simple but complete Ansible play. The slides that follow will explore each of these parts and what they do.</p>
           </aside>
@@ -717,30 +772,28 @@ tasks:
 
         <section>
           <h2>Human-Meaningful Naming</h2>
-          <pre class="language-yaml"><code data-noescape>
- ---
- - <mark>name: install and start apache</mark>
-   hosts: web
-   become: yes
-   vars:
-     http_port: 80
+          <pre class=""><code data-noescape>---
+- <mark>name: Ensure IIS is installed and started</mark>
+  hosts: web
+  become: yes
+  vars:
+    service_name: IIS Admin Service
 
-   tasks:
-   - <mark>name: httpd package is present</mark>
-     yum:
-       name: httpd
-       state: latest
+  tasks:
+  - <mark>name: Ensure IIS Server is present</mark>
+    win_feature:
+      name: Web-Server
+      state: present
 
-   - <mark>name: latest index.html file is present</mark>
-     copy:
-       src: files/index.html
-       dest: /var/www/html/
+  - <mark>name: Ensure latest index.html file is present</mark>
+    win_copy:
+      src: files/index.html
+      dest: c:\www\
 
-   - <mark>name: httpd is started</mark>
-     service:
-        name: httpd
-        state: started
-          </code></pre>
+  - <mark>name: Ensure IIS is started</mark>
+    win_service:
+      name: "{{ server_name }}"
+      state: started</code></pre>
           <aside class="notes">
             <p>Every play and each task in it can be assigned a name that describes its objective in the automation workflow and is output during execution.</p>
             <p>It&apos;s best practice to always name your plays and tasks. Adding name with a human-meaningful description better communicates the intent to users when running a play.</p>
@@ -749,30 +802,28 @@ tasks:
 
         <section>
           <h2>Host Selector</h2>
-          <pre class="language-yaml"><code data-noescape>
----
-- name: Ensure apache is installed and started
+          <pre class=""><code data-noescape>---
+- name: Ensure IIS is installed and started
   <mark>hosts: web</mark>
   become: yes
   vars:
-    http_port: 80
+    service_name: IIS Admin Service
 
   tasks:
-  - name: Ensure httpd package is present
-    yum:
-      name: httpd
-      state: latest
+  - name: Ensure IIS Server is present
+    win_feature:
+      name: Web-Server
+      state: present
 
   - name: Ensure latest index.html file is present
-    copy:
+    win_copy:
       src: files/index.html
-      dest: /var/www/html/
+      dest: c:\www\
 
-  - name: Ensure httpd is started
-    service:
-      name: httpd
-      state: started
-          </code></pre>
+  - name: Ensure IIS is started
+    win_service:
+      name: "{{ server_name }}"
+      state: started</code></pre>
           <aside class="notes">
             <p>The Ansible play host selector defines which nodes in the inventory the automation is targeting.</p>
             <p>In this example, a single group of &quot;web&quot; is being targeted. Ansible supports targeting intersections, unions and filters of multiple groups or hosts though.</p>
@@ -781,30 +832,28 @@ tasks:
         </section>
         <section>
           <h2>Privilege Escalation</h2>
-          <pre class="language-yaml"><code data-noescape>
----
-- name: Ensure apache is installed and started
+          <pre class=""><code data-noescape>---
+- name: Ensure IIS is installed and started
   hosts: web
   <mark>become: yes</mark>
   vars:
-    http_port: 80
+    service_name: IIS Admin Service
 
   tasks:
-  - name: Ensure httpd package is present
-    yum:
-      name: httpd
-      state: latest
+  - name: Ensure IIS Server is present
+    win_feature:
+      name: Web-Server
+      state: present
 
   - name: Ensure latest index.html file is present
-    copy:
+    win_copy:
       src: files/index.html
-      dest: /var/www/html/
+      dest: c:\www\
 
-  - name: Ensure httpd is started
-    service:
-      name: httpd
-      state: started
-          </code></pre>
+  - name: Ensure IIS is started
+    win_service:
+      name: "{{ server_name }}"
+      state: started</code></pre>
           <aside class="notes">
             <p>Ansible allows you to &quot;become&quot; another user or with elevated rights to execute a task or an entire play (shown above). This is done using existing privilege escalation tools, which you probably already use or have configured, like sudo (the default), su, pfexec, doas, pbrun, dzdo, ksu and others.</p>
             <p>For more details see <a href="http://docs.ansible.com/ansible/become.html">the Privilege Escalation page</a> in the Ansible documentation.</p>
@@ -812,30 +861,28 @@ tasks:
         </section>
         <section>
           <h2>Play Variables</h2>
-          <pre class="language-yaml"><code data-noescape>
----
-- name: Ensure apache is installed and started
+          <pre class=""><code data-noescape>---
+- name: Ensure IIS is installed and started
   hosts: web
   become: yes
-  <mark>vars:</mark>
-    <mark>http_port: 80</mark>
+  <mark>vars:
+    service_name: IIS Admin Service</mark>
 
   tasks:
-  - name: Ensure httpd package is present
-    yum:
-      name: httpd
-      state: latest
+  - name: Ensure IIS Server is present
+    win_feature:
+      name: Web-Server
+      state: present
 
   - name: Ensure latest index.html file is present
-    copy:
+    win_copy:
       src: files/index.html
-      dest: /var/www/html/
+      dest: c:\www\
 
-  - name: Ensure httpd is started
-    service:
-      name: httpd
-      state: started
-          </code></pre>
+  - name: Ensure IIS is started
+    win_service:
+      name: "{{ server_name }}"
+      state: started</code></pre>
           <aside class="notes">
             <p>Variables are used to store metadata for each host drawing from numerous sources. Here we see another one of those sources, a variable &quot;http_port&quot; that has been embedded in a play.</p>
             <p>Recalling the previous variable precedence slide, play variables are number 7 in Ansible&apos;s the precedence chain.</p>
@@ -843,30 +890,28 @@ tasks:
         </section>
         <section>
           <h2>Tasks</h2>
-          <pre class="language-yaml"><code data-noescape>
----
-- name: Ensure apache is installed and started
+          <pre class=""><code data-noescape>---
+- name: Ensure IIS is installed and started
   hosts: web
   become: yes
   vars:
-    http_port: 80
+    service_name: IIS Admin Service
 
   tasks:
-  - name: Ensure latest httpd package is present
-    <mark>yum:</mark>
-      <mark>name: httpd</mark>
-      <mark>state: latest</mark>
+  - name: Ensure IIS Server is present
+    <mark>win_feature:</mark>
+      <mark>name: Web-Server</mark>
+      <mark>state: present</mark>
 
   - name: Ensure latest index.html file is present
-    <mark>copy:</mark>
+    <mark>win_copy:</mark>
       <mark>src: files/index.html</mark>
-      <mark>dest: /var/www/html/</mark>
+      <mark>dest: c:\www\</mark>
 
-  - name: Ensure httpd is started
-    <mark>service:</mark>
-      <mark>name: httpd</mark>
-      <mark>state: started</mark>
-          </code></pre>
+  - name: Ensure IIS is started
+    <mark>win_service:</mark>
+      <mark>name: "{{ server_name }}"</mark>
+      <mark>state: started</mark></code></pre>
           <aside class="notes">
             <p>Here we see modules, such as yum, being applied to a to perform a unit of automation such as to assure the latest httpd package is present on a host.</p>
           </aside>
@@ -1126,12 +1171,13 @@ roles/
         // Notes plugin must remain local for now.
         // See https://github.com/ansible/lightbulb/issues/125
         dependencies: [
-          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/markdown/marked.js' },
-          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
           { src: 'plugin/notes/notes.js', async: true },
           { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.min.js'},
-          { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-yaml.min.js'}
-          //{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-yaml.min.js'},
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/highlightfragment/highlightfragment.js' },
         ]
       });
     </script>
