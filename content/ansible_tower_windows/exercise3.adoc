@@ -10,66 +10,63 @@
 :yaml_url: http://docs.ansible.com/ansible/YAMLSyntax.html
 
 
-= Exercise 1.1 - Writing Your First playbook
+= Exercise 3 - Writing Your First playbook
 
 
-Now that you've gotten a sense of how ansible works, we are going to write our first
-ansible *playbook*.  The playbook is where you can take some of those ad-hoc commands you just ran
-and put them into a repeatable set of *plays* and *tasks*.
+Let's begin by writing our first
+ansible *playbook*.  The playbook is where you list the steps you would like to automate into a repeatable set of *plays* and *tasks*.
+To begin we will setup our directory structure for storing our playbooks. This directory structure with sync with a
+*source control management* (SCM) system to version our playbooks. We will be using *git* as out SCM.
 
 A playbook can have multiple plays and a play
 can have one or multiple tasks.  The goal of a *play* is to map a group of hosts.  The goal of a *task* is to implement modules against those hosts.
 
 For our first playbook, we are only going to write one play and two tasks.
 
+All of our playbooks will be stored in a single git *repository*. Multiple users can use the same repository and git will manage file conflicts and versions.
+
 == Overview
 
-Starting at this task we are going to work from our workstation host.  We will use Visual Studio Code as our editor.  In addition, we will use GitLab for source code control.  This will allow us to minimize development work on the linux command line.  Other editors or source code solutions can be used, but this will show the general workflow.
+Starting at this task we are going to work from our *workstation* host.  We will use Visual Studio Code as our editor.  In addition, we will use GitLab for source code control.
+This will allow us to minimize development work on the linux command line.  Other editors or source code solutions can be used, but this will show the general workflow.
 
 == Section 1: Creating a Directory Structure and Files for your Playbook
 
 There is a link:{dir_url}[best practice] on the preferred directory structures for playbooks.  We strongly encourage
 you to read and understand these practices as you develop your Ansible ninja skills.  That said,
-our playbook today is very basic and creating a complex structure will just confuse things.
+our playbook today is very basic and a complex directory structure is not necessary.
 
-Instead, we are going to create a very simple directory structure for our playbook, and add just a couple of files to it.
+Instead, we are going to create a very simple directory structure for our playbook, and add just a couple of files.
 
 
 *Step 1:* Open Visual Studio Code and Clone an empty git repository
 
-When you open Visual Studio Code, a 'Welcome' screen will load.  When prompted, choose `Firefox` as your default browser (and don't import anything).  You can close the browser for now.
+When you open Visual Studio Code, a 'Welcome' screen will load.  Choose `Firefox` when prompted for a default browser (and don't import anything).  You can close the browser for now.
 
 [NOTE]
 Internet Explorer 11 has some issues with Ansible Tower in the later labs.  Due to this we will use Firefox in these examples.
 
-In the main window, click 'Clone git repository'
+To begin, we must clone the repository from the GitLab server. Open the command pallet by clicking `View` > `Command Pallet` or `Ctrl+Shift+P`.
+A text box will appear at the top of the editor and we will search for `Git: Clone` by typing into the box. Once highlighted, click `Git: Clone` to activate.
 
-TODO - Create a 1.1-vscode-gitclone.png!!! Missed this one!
-image::.png[title="Git Clone",width=1000]
+Enter the Repository URL into the Command Pallet. The URL is https://gitlab/student#/student#-playbooks.git, where # is your student number.
+When it prompts you for directory, leave the default (C:\Users\student#)
 
-At the top, enter https://gitlab.ansibleworkshop.com/student#/student#-playbooks.git, where # is your student number.
-When it prompts you for directory, leave the default (C:\Users\Administrator)
-
-You will see the progress spin in the bottom left bar.  Eventually you will be prompted for your gitlab user/password.  (Watch your menu bar for this to pop up)  Use your AD credentials (student#/...)
+You will see the progress spin in the bottom left corner.  Eventually you will be prompted for your gitlab user/password.  (Watch the Command Pallet for the prompt)  Use your AD credentials (<domain>\student#)
 
 image::1.1-vscode-gitclonepassword.png[title="Git Clone Password",width=1000]
 
 
 Once synced, click the `Open Repository` button at the top.
 
-At this point in the Explorer accordion you should have a 'student#-playbooks' section with no files.
+At this point in the Explorer sidebar you should have a 'student#-playbooks' section with no files.
 
 image::1-1-vscode-studentplaybooks.png[title="Student Playbooks Repo",width=1000]
 
 *Step 2:* Create a directory called *iis_basic* and a file called `install_iis.yml`
 
-Hover over the 'student#-playbooks' section and click on the 'New Folder' button
-
-Type iis_basic and hit enter.  Then click on that folder so it is selected.
-
-Hover over the 'student#-playbooks' section again and click on the 'New File' button.
-
-Type install_iis.yml and hit enter.
+Hover over the 'student#-playbooks' section and click on the 'New Folder' button. Create a folder called `iis_basic`.  Then click on that folder so it is selected.
+Right click on the new folder you've created and create a file called `install_iis.yml`.
 
 You should now have an editor open in the right pane that can be used for creating your playbook.
 
@@ -82,33 +79,35 @@ Now that you are editing `install_iis.yml`, let's begin by defining the play and
 [source,bash]
 ----
 ---
-- hosts: windows
-  name: Install the IIS web service
+- name: install the iis web service
+  hosts: web
+
 ----
 
 
 
 - `---` Defines the beginning of YAML
-- `hosts: windows` Defines the host group in your inventory on which this play will run against
-- `name: Install the IIS web service` This describes our play
+- `name: install the iis web service` This describes our play
+- `hosts: web` Defines the host group in your inventory on which this play will run against
+
 
 
 == Section 3: Adding Tasks to Your Play
 
-Now that we've defined your play, let's add some tasks to get some things done.  Align (vertically) the *t* in `task` with the *n* `name`.  +
-Yes, it does actually matter.  In fact, you should make sure all of your playbook statements are aligned in the way shown here. +
+Now that we've defined your play, let's add some tasks to get some things done.  Align (vertically) the *t* in `task` with the *h* in `hosts`.  +
+Yes, it does actually matter.  In fact, you should make sure all of your playbook statements are aligned in the way shown here. You also must use spaces for indentation. Tabs are not valid YAML syntax. +
 If you want to see the entire playbook for reference, skip to the bottom of this exercise.
 
 
 [source,bash]
 ----
   tasks:
-   - name: Install IIS
+   - name: install iis
      win_feature:
        name: Web-Server
        state: present
 
-   - name: Start IIS Service
+   - name: start iis service
      win_service:
        name: W3Svc
        state: started
@@ -149,21 +148,19 @@ about the *win_service* module.
 
 == Section 4: Saving your Playbook
 
-Now that you've completed writing your playbook, it would be a shame not to keep it.
-
-Click 'File' from the menu and then click 'Save'
-
+Now that you've completed writing your playbook, it would be a shame not to keep it. Click `File > Save` from the menu.
 
 And that should do it.  You should now have a fully written playbook called `install_iis.yml`.
 
-But wait!!!  We haven't committed our changes from our local copy to source code.
+But wait!!! We haven't committed our changes from our *local* copy to *git*.
 Click on the Source Code icon as shown below (It is the middle on the far left of the page that has the blue circle with # 1 in it)
 
-Type in a commit message such as 'Adding install_iis.yml' and click the check box above to commit.
+Type in a commit message such as 'Adding install_iis.yml' in the text box at the top of the sidebar. Click the check box above to commit.
+This message is intended to describe the changes you made so that others (including yourself) better understand what is changing when comparing versions.
 
 image::1.1-vscode-install_iis.yml_commit.png[title="Git Commit install_iis.yml",width=1000]
 
-This will prompt to ask if you want to stage the changes.  Click on 'Always' and you won't be prompted again.
+This will prompt to ask if you want to stage the changes.  Click on `Always` and you won't be prompted again.
 
 image::1.1-vscode-stage_commits_always.png[title="Stage Commits Always",width=600]
 
@@ -175,7 +172,7 @@ Next in the top of the window it will prompt you to pick a remote to publish to.
 
 image::1.1-vscode-gitpush_origin.png[title="Git Push Origin",width=1000]
 
-This may take as long as 30 seconds to push.  If you're interested in validating the code is in git, you can connect to gitlab to verify.  Open `Firefox` and connect to `https://gitlab.ansibleworkshop.com`.  Login with your AD user (student#) and password and you should see your repo.
+This may take as long as 30 seconds to push.  If you're interested in validating the code is in git, you can connect to gitlab to verify.  Open `Firefox` and connect to `https://gitlab`.  Login with your AD user (student#) and password and you should see your repo.
 
 You are ready to automate!
 
@@ -188,23 +185,18 @@ like this.  Take note of the spacing and alignment.
 [source,bash]
 ----
 ---
-- hosts: windows
-  name: Install the IIS web service
+- name: install the iis web service
+  hosts: web
+
 
   tasks:
-    - name: Install IIS
+    - name: install iis
       win_feature:
         name: Web-Server
         state: present
 
-    - name: Start IIS Service
+    - name: start iis service
       win_service:
         name: W3Svc
         state: started
 ----
-
-
-
-
-
-

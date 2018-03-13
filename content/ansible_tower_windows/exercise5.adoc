@@ -11,7 +11,7 @@
 :handler_url: http://docs.ansible.com/ansible/latest/playbooks_intro.html#handlers-running-operations-on-change
 
 
-= Exercise 1.3 - Using Variables, Loops, and Handlers
+= Exercise 5 - Using Variables, Loops, and Handlers
 
 
 Previous exercises showed you the basics of Ansible Core.  In the next few exercises, we are going
@@ -314,9 +314,3 @@ looks the way you intended.  If not, now is the time for us to fix it up. The fi
         state: restarted
         start_mode: auto
 ----
-
-
-
-
-
-

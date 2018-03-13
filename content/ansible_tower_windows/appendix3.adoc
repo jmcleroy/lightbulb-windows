@@ -4,9 +4,9 @@
 
 
 
-= Exercise 3.1 - Using Ansible for Desired State Config
+= Exercise 3.1 - Using Ansible to run Powershell
 
-Review use cases around using new desired state config capabilities
+
 
 
 == Header 1
@@ -38,9 +38,3 @@ TODO
 === End Result
 
 TODO
-
-
-
-
-
-
