@@ -4,20 +4,20 @@
   gather_facts: no
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
-  tags: 
+  tags:
     - manage-instances
   vars:
     teardown: false
   tasks:
   - include_role:
       name: "manage-{{ instance_loc }}-instances"
- 
+
 - name: Configure Active Directory Domain Controller
   hosts: windows_domain_controllers
   gather_facts: no
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
-  tags: 
+  tags:
     - windows-ad-controller
   roles:
     - windows-ad-controller
@@ -27,9 +27,9 @@
   gather_facts: True
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
-  tags: 
+  tags:
     - windows_hosts
-  roles: 
+  roles:
     - windows-common
 
 - name: Configure GitLab Host
@@ -49,7 +49,6 @@
 - name: Gitlab Post Config
   hosts: gitlab
   become: True
-  remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
@@ -58,7 +57,7 @@
   roles:
     - { role: gitlab-postconfig }
 
-- name: Configure Ansible Host 
+- name: Configure Ansible Host
   hosts: tower
   become: True
   remote_user: "{{ root_user }}"
@@ -67,7 +66,7 @@
     - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
     - ansible-tower
-  roles: 
+  roles:
     - linux-common
     - ansible-tower
 
