@@ -9,26 +9,26 @@
   fail:
     msg: "Keypair <{{ keypair }}> does not exist"
   when: "keypair not in ec2_keypairs.stdout"
-  
-- name: Tower | Create Ansible Control Node security group   
-  ec2_group:  
-    name: "{{ name_prefix }}-towersg"  
-    description: "Ansible Tower SG"  
-    vpc_id: "{{ vpc_id }}"  
-    region: "{{ region }}"  
-    rules:    
-      - proto: tcp  
+
+- name: Tower | Create Ansible Control Node security group
+  ec2_group:
+    name: "{{ name_prefix }}-towersg"
+    description: "Ansible Tower SG"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    rules:
+      - proto: tcp
         from_port: 80
         to_port: 80
-        cidr_ip: 0.0.0.0/0  
+        cidr_ip: 0.0.0.0/0
       - proto: tcp
         from_port: 443
         to_port: 443
         cidr_ip: 0.0.0.0/0
-      - proto: tcp   
+      - proto: tcp
         from_port: 22
         to_port: 22
-        cidr_ip: 0.0.0.0/0  
+        cidr_ip: 0.0.0.0/0
 
 - name: GitLab | Create Gitlab Node security group
   ec2_group:
@@ -61,7 +61,7 @@
       subnet-id: "{{ vpc_subnet_id }}"
   register: vpc_subnet_facts
 
-- set_fact: 
+- set_fact:
      vpc_subnet_cidr: "{{ vpc_subnet_facts.subnets[0].cidr_block }}"
 
 # VPC cidr used to restrict AD access to others in your subnet
@@ -156,7 +156,7 @@
         from_port: 9389
         to_port: 9389
         cidr_ip: "{{ vpc_subnet_cidr }}"
-      ## Replication, Auth, Trusts 
+      ## Replication, Auth, Trusts
       - proto: tcp
         from_port: 445
         to_port: 445
@@ -244,7 +244,7 @@
     wait: true
     region: "{{ region }}"
     vpc_subnet_id: "{{ vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'windc_ec2_user_data.j2') }}"
+    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix+'-windc')) }}"
     assign_public_ip: yes
   with_sequence: count=1
   register: dc_jobs
@@ -254,7 +254,7 @@
 - name: Windows | Launch instance 1
   ec2:
     key_name: "{{ keypair }}"
-    group: 
+    group:
       - "{{ name_prefix }}-windowssg"
       - "{{ name_prefix }}-websg"
     instance_type: "{{ windows_instance_type }}"
@@ -270,7 +270,7 @@
     wait: true
     region: "{{ region }}"
     vpc_subnet_id: "{{ vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'win1_ec2_user_data.j2') }}"
+    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'win1')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: windows1_jobs
@@ -295,32 +295,32 @@
     wait: true
     region: "{{ region }}"
     vpc_subnet_id: "{{ vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'win_ws_ec2_user_data.j2') }}"
+    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'workstation')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: workstation_jobs
   async: 7200
   poll: 0
 
-- name: Launch Tower Instance  
-  ec2:  
-    key_name: "{{ keypair }}"  
-    group: "{{ name_prefix }}-towersg"  
-    instance_type: "{{ tower_instance_type }}"  
+- name: Launch Tower Instance
+  ec2:
+    key_name: "{{ keypair }}"
+    group: "{{ name_prefix }}-towersg"
+    instance_type: "{{ tower_instance_type }}"
     exact_count: 1
-    count_tag: 
+    count_tag:
       Name: "{{ name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
-    instance_tags:  
+    instance_tags:
       Name: "{{ name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
-    image: "{{ rhel_ami }}"  
-    wait: true  
-    region: "{{ region }}"  
-    vpc_subnet_id: "{{ vpc_subnet_id }}"  
+    image: "{{ rhel_ami }}"
+    wait: true
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'linux_ec2_user_data.j2') }}"
-    assign_public_ip: yes  
+    assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: tower_jobs
   async: 7200
@@ -377,7 +377,7 @@
   register: windows_instances
   until: windows_instances.finished
   retries: 300
-  with_items: 
+  with_items:
     - "{{ windows1_jobs.results }}"
 #    - "{{ windows2_jobs.results }}"
 
@@ -391,14 +391,14 @@
 
 ################### Wait for Instances ###################
 
-- name: Tower | Wait for SSH to come up  
-  wait_for:  
-    host: "{{ item.public_ip }}"  
-    port: 22  
-    delay: 1  
-    timeout: 320  
-    state: started  
-  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"  
+- name: Tower | Wait for SSH to come up
+  wait_for:
+    host: "{{ item.public_ip }}"
+    port: 22
+    delay: 1
+    timeout: 320
+    state: started
+  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"
 
 - name: GitLab | Wait for SSH to come up
   wait_for:
@@ -407,7 +407,7 @@
     delay: 1
     timeout: 320
     state: started
-  with_items: "{{ gitlab_instances.results | map(attribute='tagged_instances') | list }}"  
+  with_items: "{{ gitlab_instances.results | map(attribute='tagged_instances') | list }}"
 
 - name: DomainController | Wait for WinRM to come up
   wait_for:
@@ -416,7 +416,7 @@
     delay: 1
     timeout: 1800
     state: started
-  with_items: "{{ dc_instances.results | map(attribute='tagged_instances') | list }}"  
+  with_items: "{{ dc_instances.results | map(attribute='tagged_instances') | list }}"
 
 - name: Windows | Wait for WinRM to come up
   wait_for:
@@ -473,21 +473,25 @@
 
 ################### Add Hosts ###################
 
-- name: Tower | Add new instance to host group  
-  add_host:  
-    hostname: "{{ item.tags.Name }}"  
-    ansible_ssh_host: "{{ item.public_ip }}"  
+- name: Tower | Add new instance to host group
+  add_host:
+    hostname: "{{ item.tags.Name }}"
+    ansible_user: "{{ root_user }}"
+    ansible_ssh_private_key_file: "{{ ec2_key_file }}"
+    ansible_host: "{{ item.public_ip }}"
     private_ip: "{{ item.private_ip }}"
     groups: tower
-  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"  
+  with_items: "{{ tower_instances.results | map(attribute='tagged_instances') | list }}"
 
-- name: GitLab | Add new instance to host group  
-  add_host:  
-    hostname: "{{ item.tags.Name }}"  
-    ansible_ssh_host: "{{ item.public_ip }}"  
+- name: GitLab | Add new instance to host group
+  add_host:
+    hostname: 'gitlab'
+    ansible_user: "{{ root_user }}"
+    ansible_ssh_private_key_file: "{{ ec2_key_file }}"
+    ansible_host: "{{ item.public_ip }}"
     private_ip: "{{ item.private_ip }}"
     groups: gitlab
-  with_items: "{{ gitlab_instances.results | map(attribute='tagged_instances') | list }}"  
+  with_items: "{{ gitlab_instances.results | map(attribute='tagged_instances') | list }}"
 
 - name: DomainController | Add new instance to host group
   add_host:
@@ -546,4 +550,3 @@
     src: instances.txt.j2
     dest: ./{{user_prefix}}{{ item }}-instances.txt
   with_sequence: count="{{ user_count }}"
-
