@@ -20,7 +20,7 @@ vpc_id: "vpc-########"
 vpc_subnet_id: "subnet-########"
 region: "us-east-1"
 ec2_key_file: "~/.ssh/mykeypair.pem"
-ec2_name_prefix: "win-workshop"
+name_prefix: "win-workshop"
 
 # VCenter Information
 vCenterServer: 10.0.1.2
@@ -102,3 +102,36 @@ rhel_ami: ami-c998b6b2              # Rhel 7.4
 #windows_ami: ami-0a792a70           # Windows 2016 Base
 windows_ami: ami-013e197b           # Windows 2016 Base
 
+##### AZURE INFO
+azure_admin_user: "skylight"
+azure_admin_pass: "MyS3cr3tP@ssw0rd"
+
+azure_client_id: '' 
+azure_secret: ''
+azure_subscription_id: ''
+azure_tenant: ''
+azure_location: ''
+
+azure_resource_group: skylight_rg
+azure_storage_account: skylightstorage
+azure_storage_account_type: Standard_LRS
+azure_virtual_network: skylightnetwork
+azure_virtual_subnet: skylightsubnet
+
+# Instance Sizes
+azure_tower_instance_type: "Standard_A2_v2"    # Medium = 2 vCPU / 4GB
+azure_gitlab_instance_type: "Standard_A2_v2"   # Might be able to use small... 
+azure_windc_instance_type: "Standard_A2_v2"    # t2.micro fails 
+azure_windows_workstation_instance_type: "Standard_A2_v2"   # t2.small was slowwwwww...
+azure_windows_instance_type: "Standard_A1_v2"   # Small = 1 vCPU / 2GB 
+
+# Ideally update to auto-pull the latest
+azure_rhel_publisher: "RedHat"
+azure_rhel_offer: "RHEL"
+azure_rhel_sku: "7.3"
+azure_rhel_version: "7.3.2017090723"
+
+azure_win_publisher: "MicrosoftWindowsServer"
+azure_win_offer: "WindowsServer"
+azure_win_sku: "2016-Datacenter"
+azure_win_version: "2016.127.20171217"  

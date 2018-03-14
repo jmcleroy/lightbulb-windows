@@ -12,7 +12,7 @@
   
 - name: Tower | Create Ansible Control Node security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-towersg"  
+    name: "{{ name_prefix }}-towersg"  
     description: "Ansible Tower SG"  
     vpc_id: "{{ vpc_id }}"  
     region: "{{ region }}"  
@@ -32,7 +32,7 @@
 
 - name: GitLab | Create Gitlab Node security group
   ec2_group:
-    name: "{{ ec2_name_prefix }}-gitlabsg"
+    name: "{{ name_prefix }}-gitlabsg"
     description: "Gitlab SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -67,7 +67,7 @@
 # VPC cidr used to restrict AD access to others in your subnet
 - name: DomainController | Create MS AD Domain Controller security group
   ec2_group:
-    name: "{{ ec2_name_prefix }}-windcsg"
+    name: "{{ name_prefix }}-windcsg"
     description: "Microsoft AD Domain Controller SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -181,7 +181,7 @@
 
 - name: Windows | Create MS Windows security group
   ec2_group:
-    name: "{{ ec2_name_prefix }}-windowssg"
+    name: "{{ name_prefix }}-windowssg"
     description: "Microsoft Windows SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -198,7 +198,7 @@
 
 - name: Windows | Create HTTP security group
   ec2_group:
-    name: "{{ ec2_name_prefix }}-websg"
+    name: "{{ name_prefix }}-websg"
     description: "Web Server SG"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
@@ -231,14 +231,14 @@
 - name: DomainController | Launch instance
   ec2:
     key_name: "{{ keypair }}"
-    group: "{{ ec2_name_prefix }}-windcsg"
+    group: "{{ name_prefix }}-windcsg"
     instance_type: "{{ windc_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix }}-windc"
+      Name: "{{ name_prefix }}-windc"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix }}-windc"
+      Name: "{{ name_prefix }}-windc"
       App: AnsibleWorkshop
     image: "{{ windows_ami }}"
     wait: true
@@ -255,15 +255,15 @@
   ec2:
     key_name: "{{ keypair }}"
     group: 
-      - "{{ ec2_name_prefix }}-windowssg"
-      - "{{ ec2_name_prefix }}-websg"
+      - "{{ name_prefix }}-windowssg"
+      - "{{ name_prefix }}-websg"
     instance_type: "{{ windows_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ name_prefix + '-s' + item + 'win1'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ name_prefix + '-s' + item + 'win1'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"
@@ -281,14 +281,14 @@
   ec2:
     key_name: "{{ keypair }}"
     group:
-      - "{{ ec2_name_prefix }}-windowssg"
+      - "{{ name_prefix }}-windowssg"
     instance_type: "{{ windows_workstation_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ windows_ami }}"
@@ -305,14 +305,14 @@
 - name: Launch Tower Instance  
   ec2:  
     key_name: "{{ keypair }}"  
-    group: "{{ ec2_name_prefix }}-towersg"  
+    group: "{{ name_prefix }}-towersg"  
     instance_type: "{{ tower_instance_type }}"  
     exact_count: 1
     count_tag: 
-      Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
+      Name: "{{ name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
     instance_tags:  
-      Name: "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
+      Name: "{{ name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ rhel_ami }}"  
@@ -329,14 +329,14 @@
 - name: GitLab | Launch Instance
   ec2:
     key_name: "{{ keypair }}"
-    group: "{{ ec2_name_prefix }}-gitlabsg"
+    group: "{{ name_prefix }}-gitlabsg"
     instance_type: "{{ gitlab_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ ec2_name_prefix }}-gitlab"
+      Name: "{{ name_prefix }}-gitlab"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ ec2_name_prefix }}-gitlab"
+      Name: "{{ name_prefix }}-gitlab"
       App: AnsibleWorkshop
     image: "{{ rhel_ami }}"
     wait: true
@@ -442,7 +442,7 @@
   ec2_win_password:
     region: '{{ region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ ec2_key_file }}"
+    key_file: "{{ key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ dc_instances.results | map(attribute='tagged_instances') | list }}"
@@ -453,7 +453,7 @@
   ec2_win_password:
     region: '{{ region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ ec2_key_file }}"
+    key_file: "{{ key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ workstation_instances.results | map(attribute='tagged_instances') | list }}"
@@ -464,7 +464,7 @@
   ec2_win_password:
     region: '{{ region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ ec2_key_file }}"
+    key_file: "{{ key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ windows_instances.results | map(attribute='tagged_instances') | list }}"
