@@ -5,7 +5,7 @@
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc_id }}"
-      "tag:Name": "{{ ec2_name_prefix + '-s' + item + '-tower'}}"
+      "tag:Name": "{{ name_prefix + '-s' + item + '-tower'}}"
   with_sequence: count={{ user_count }}
   register: ec2_tower_instances
 
@@ -24,7 +24,7 @@
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc_id }}"
-      "tag:Name": "{{ ec2_name_prefix }}-gitlab"
+      "tag:Name": "{{ name_prefix }}-gitlab"
   register: ec2_gitlab_instances
 
 - name: Terminate Gitlab Instances
@@ -42,7 +42,7 @@
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc_id }}"
-      "tag:Name": "{{ ec2_name_prefix }}-windc"
+      "tag:Name": "{{ name_prefix }}-windc"
   register: ec2_dc_instances
 
 - name: Terminate DC Instances
@@ -60,7 +60,7 @@
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc_id }}"
-      "tag:Name": "{{ ec2_name_prefix + '-s' + item + 'win1'}}"
+      "tag:Name": "{{ name_prefix + '-s' + item + 'win1'}}"
   with_sequence: count={{user_count}}
   register: ec2_windows_instances
 
@@ -79,7 +79,7 @@
     region: "{{ region }}"
     filters:
       vpc-id: "{{ vpc_id }}"
-      "tag:Name": "{{ ec2_name_prefix + '-s' + item + 'workstation'}}"
+      "tag:Name": "{{ name_prefix + '-s' + item + 'workstation'}}"
   with_sequence: count={{user_count}}
   register: ec2_workstation_instances
 
@@ -96,7 +96,7 @@
 
 - name: Remove Tower security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-towersg"
+    name: "{{ name_prefix }}-towersg"
     state: absent
   register: result
   until: result|success
@@ -105,7 +105,7 @@
 
 - name: Remove Gitlab security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-gitlabsg"
+    name: "{{ name_prefix }}-gitlabsg"
     state: absent
   register: result
   until: result|success
@@ -114,7 +114,7 @@
 
 - name: Remove DC security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-windcsg"
+    name: "{{ name_prefix }}-windcsg"
     state: absent
   register: result
   until: result|success
@@ -123,7 +123,7 @@
 
 - name: Remove Web security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-websg"
+    name: "{{ name_prefix }}-websg"
     state: absent
   register: result
   until: result|success
@@ -132,7 +132,7 @@
 
 - name: Remove Windows security group   
   ec2_group:  
-    name: "{{ ec2_name_prefix }}-windowssg"
+    name: "{{ name_prefix }}-windowssg"
     state: absent
   register: result
   until: result|success
