@@ -2,16 +2,16 @@
 # ----------------------- Destroy Tower Instances -----------------------
 - name: Get ec2 Tower instance information
   ec2_instance_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      vpc-id: "{{ vpc_id }}"
+      vpc-id: "{{ ec2_vpc_id }}"
       "tag:Name": "{{ name_prefix + '-s' + item + '-tower'}}"
   with_sequence: count={{ user_count }}
   register: ec2_tower_instances
 
 - name: Terminate Tower Instances
   ec2:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     state: "absent"
     instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
   with_items:
@@ -21,15 +21,15 @@
 # ----------------------- Destroy Gitlab Instances -----------------------
 - name: Get ec2 Gitlab instance information
   ec2_instance_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      vpc-id: "{{ vpc_id }}"
+      vpc-id: "{{ ec2_vpc_id }}"
       "tag:Name": "{{ name_prefix }}-gitlab"
   register: ec2_gitlab_instances
 
 - name: Terminate Gitlab Instances
   ec2:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     state: "absent"
     instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
   with_items:
@@ -39,15 +39,15 @@
 # ----------------------- Destroy DC Instances -----------------------
 - name: Get ec2 DC instance information
   ec2_instance_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      vpc-id: "{{ vpc_id }}"
+      vpc-id: "{{ ec2_vpc_id }}"
       "tag:Name": "{{ name_prefix }}-windc"
   register: ec2_dc_instances
 
 - name: Terminate DC Instances
   ec2:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     state: "absent"
     instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
   with_items:
@@ -57,16 +57,16 @@
 # ----------------------- Destroy Windows Instances -----------------------
 - name: Get ec2 Windows instance information
   ec2_instance_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      vpc-id: "{{ vpc_id }}"
+      vpc-id: "{{ ec2_vpc_id }}"
       "tag:Name": "{{ name_prefix + '-s' + item + 'win1'}}"
   with_sequence: count={{user_count}}
   register: ec2_windows_instances
 
 - name: Terminate Windows Instances
   ec2:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     state: "absent"
     instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
   with_items:
@@ -76,16 +76,16 @@
 # ----------------------- Destroy Workstation Instances -----------------------
 - name: Get ec2 Workstation instance information
   ec2_instance_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      vpc-id: "{{ vpc_id }}"
+      vpc-id: "{{ ec2_vpc_id }}"
       "tag:Name": "{{ name_prefix + '-s' + item + 'workstation'}}"
   with_sequence: count={{user_count}}
   register: ec2_workstation_instances
 
 - name: Terminate Workstation Instances
   ec2:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     state: "absent"
     instance_ids: "{{ item.instances | map(attribute='instance_id') | list }}"
   with_items:
@@ -94,8 +94,8 @@
 
 ################### Remove Security Groups ###################
 
-- name: Remove Tower security group   
-  ec2_group:  
+- name: Remove Tower security group
+  ec2_group:
     name: "{{ name_prefix }}-towersg"
     state: absent
   register: result
@@ -103,8 +103,8 @@
   retries: 20
   delay: 10
 
-- name: Remove Gitlab security group   
-  ec2_group:  
+- name: Remove Gitlab security group
+  ec2_group:
     name: "{{ name_prefix }}-gitlabsg"
     state: absent
   register: result
@@ -112,8 +112,8 @@
   retries: 20
   delay: 10
 
-- name: Remove DC security group   
-  ec2_group:  
+- name: Remove DC security group
+  ec2_group:
     name: "{{ name_prefix }}-windcsg"
     state: absent
   register: result
@@ -121,8 +121,8 @@
   retries: 20
   delay: 10
 
-- name: Remove Web security group   
-  ec2_group:  
+- name: Remove Web security group
+  ec2_group:
     name: "{{ name_prefix }}-websg"
     state: absent
   register: result
@@ -130,8 +130,8 @@
   retries: 20
   delay: 10
 
-- name: Remove Windows security group   
-  ec2_group:  
+- name: Remove Windows security group
+  ec2_group:
     name: "{{ name_prefix }}-windowssg"
     state: absent
   register: result

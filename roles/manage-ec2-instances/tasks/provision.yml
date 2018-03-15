@@ -7,15 +7,15 @@
 
 - name: Fail if keypair doesn't exist
   fail:
-    msg: "Keypair <{{ keypair }}> does not exist"
-  when: "keypair not in ec2_keypairs.stdout"
+    msg: "Keypair <{{ ec2_keypair }}> does not exist"
+  when: "ec2_keypair not in ec2_keypairs.stdout"
 
 - name: Tower | Create Ansible Control Node security group
   ec2_group:
     name: "{{ name_prefix }}-towersg"
     description: "Ansible Tower SG"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ region }}"
+    vpc_id: "{{ ec2_vpc_id }}"
+    region: "{{ ec2_region }}"
     rules:
       - proto: tcp
         from_port: 80
@@ -34,8 +34,8 @@
   ec2_group:
     name: "{{ name_prefix }}-gitlabsg"
     description: "Gitlab SG"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ region }}"
+    vpc_id: "{{ ec2_vpc_id }}"
+    region: "{{ ec2_region }}"
     rules:
       - proto: tcp
         from_port: 80
@@ -56,9 +56,9 @@
 
 - name: DomainController | Get facts from vpc subnet
   ec2_vpc_subnet_facts:
-    region: "{{ region }}"
+    region: "{{ ec2_region }}"
     filters:
-      subnet-id: "{{ vpc_subnet_id }}"
+      subnet-id: "{{ ec2_vpc_subnet_id }}"
   register: vpc_subnet_facts
 
 - set_fact:
@@ -69,8 +69,8 @@
   ec2_group:
     name: "{{ name_prefix }}-windcsg"
     description: "Microsoft AD Domain Controller SG"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ region }}"
+    vpc_id: "{{ ec2_vpc_id }}"
+    region: "{{ ec2_region }}"
     rules:
       ## WinRM / RDP
       - proto: tcp
@@ -183,8 +183,8 @@
   ec2_group:
     name: "{{ name_prefix }}-windowssg"
     description: "Microsoft Windows SG"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ region }}"
+    vpc_id: "{{ ec2_vpc_id }}"
+    region: "{{ ec2_region }}"
     rules:
       ## WinRM / RDP
       - proto: tcp
@@ -200,8 +200,8 @@
   ec2_group:
     name: "{{ name_prefix }}-websg"
     description: "Web Server SG"
-    vpc_id: "{{ vpc_id }}"
-    region: "{{ region }}"
+    vpc_id: "{{ ec2_vpc_id }}"
+    region: "{{ ec2_region }}"
     rules:
       ## HTTP/HTTPS
       - proto: tcp
@@ -230,9 +230,9 @@
 
 - name: DomainController | Launch instance
   ec2:
-    key_name: "{{ keypair }}"
+    key_name: "{{ ec2_keypair }}"
     group: "{{ name_prefix }}-windcsg"
-    instance_type: "{{ windc_instance_type }}"
+    instance_type: "{{ ec2_windc_instance_type }}"
     exact_count: 1
     count_tag:
       Name: "{{ name_prefix }}-windc"
@@ -240,10 +240,10 @@
     instance_tags:
       Name: "{{ name_prefix }}-windc"
       App: AnsibleWorkshop
-    image: "{{ windows_ami }}"
+    image: "{{ ec2_windows_ami }}"
     wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    region: "{{ ec2_region }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix+'-windc')) }}"
     assign_public_ip: yes
   with_sequence: count=1
@@ -253,11 +253,11 @@
 
 - name: Windows | Launch instance 1
   ec2:
-    key_name: "{{ keypair }}"
+    key_name: "{{ ec2_keypair }}"
     group:
       - "{{ name_prefix }}-windowssg"
       - "{{ name_prefix }}-websg"
-    instance_type: "{{ windows_instance_type }}"
+    instance_type: "{{ ec2_windows_instance_type }}"
     exact_count: 1
     count_tag:
       Name: "{{ name_prefix + '-s' + item + 'win1'}}"
@@ -266,10 +266,10 @@
       Name: "{{ name_prefix + '-s' + item + 'win1'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
-    image: "{{ windows_ami }}"
+    image: "{{ ec2_windows_ami }}"
     wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    region: "{{ ec2_region }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'win1')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
@@ -279,10 +279,10 @@
 
 - name: Workstation | Launch instance
   ec2:
-    key_name: "{{ keypair }}"
+    key_name: "{{ ec2_keypair }}"
     group:
       - "{{ name_prefix }}-windowssg"
-    instance_type: "{{ windows_workstation_instance_type }}"
+    instance_type: "{{ ec2_windows_workstation_instance_type }}"
     exact_count: 1
     count_tag:
       Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
@@ -291,10 +291,10 @@
       Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
-    image: "{{ windows_ami }}"
+    image: "{{ ec2_windows_ami }}"
     wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    region: "{{ ec2_region }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'workstation')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
@@ -304,9 +304,9 @@
 
 - name: Launch Tower Instance
   ec2:
-    key_name: "{{ keypair }}"
+    key_name: "{{ ec2_keypair }}"
     group: "{{ name_prefix }}-towersg"
-    instance_type: "{{ tower_instance_type }}"
+    instance_type: "{{ ec2_tower_instance_type }}"
     exact_count: 1
     count_tag:
       Name: "{{ name_prefix + '-s' + item + '-tower'}}"
@@ -315,10 +315,10 @@
       Name: "{{ name_prefix + '-s' + item + '-tower'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
-    image: "{{ rhel_ami }}"
+    image: "{{ ec2_rhel_ami }}"
     wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    region: "{{ ec2_region }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'linux_ec2_user_data.j2') }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
@@ -328,9 +328,9 @@
 
 - name: GitLab | Launch Instance
   ec2:
-    key_name: "{{ keypair }}"
+    key_name: "{{ ec2_keypair }}"
     group: "{{ name_prefix }}-gitlabsg"
-    instance_type: "{{ gitlab_instance_type }}"
+    instance_type: "{{ ec2_gitlab_instance_type }}"
     exact_count: 1
     count_tag:
       Name: "{{ name_prefix }}-gitlab"
@@ -338,10 +338,10 @@
     instance_tags:
       Name: "{{ name_prefix }}-gitlab"
       App: AnsibleWorkshop
-    image: "{{ rhel_ami }}"
+    image: "{{ ec2_rhel_ami }}"
     wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    region: "{{ ec2_region }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     user_data: "{{ lookup('template', 'gitlab_ec2_user_data.j2') }}"
     assign_public_ip: yes
   with_sequence: count=1
@@ -440,7 +440,7 @@
 
 - name: DomainController | Obtain windows passwords for instances
   ec2_win_password:
-    region: '{{ region }}'
+    region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
     key_file: "{{ key_file }}"
     wait: yes
@@ -451,7 +451,7 @@
 
 - name: Workstation | Obtain windows passwords for instances
   ec2_win_password:
-    region: '{{ region }}'
+    region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
     key_file: "{{ key_file }}"
     wait: yes
@@ -462,7 +462,7 @@
 
 - name: Windows | Obtain windows passwords for instances
   ec2_win_password:
-    region: '{{ region }}'
+    region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
     key_file: "{{ key_file }}"
     wait: yes

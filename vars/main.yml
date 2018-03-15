@@ -5,6 +5,7 @@
 
 # Where to provision instances (ec2, azure, vmware)
 instance_loc: ec2
+name_prefix: "skylight"
 
 # Needed for AD and windows client provision
 dns_domain_name: "ansibleworkshop.com"
@@ -74,22 +75,21 @@ gitlab_smtp_enable: "false"
 ######################## EC2 INFO ########################
 ##########################################################
 
-keypair: "mykeypair"
-vpc_id: "vpc-########"
-vpc_subnet_id: "subnet-########"
-region: "us-east-1"
+ec2_keypair: "mykeypair"
+ec2_vpc_id: "vpc-########"
+ec2_vpc_subnet_id: "subnet-########"
+ec2_region: "us-east-1"
 ec2_key_file: "~/.ssh/mykeypair.pem"
-name_prefix: "win-workshop"
 # Instance Sizes
-tower_instance_type: "t2.medium"    # Medium = 2 vCPU / 4GB
-gitlab_instance_type: "t2.medium"   # Might be able to use small...
-windc_instance_type: "t2.medium"    # t2.micro fails
-windows_workstation_instance_type: "t2.medium"   # t2.small was slowwwwww...
-windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
+ec2_tower_instance_type: "t2.medium"    # Medium = 2 vCPU / 4GB
+ec2_gitlab_instance_type: "t2.medium"   # Might be able to use small...
+ec2_windc_instance_type: "t2.medium"    # t2.micro fails
+ec2_windows_workstation_instance_type: "t2.medium"   # t2.small was slowwwwww...
+ec2_windows_instance_type: "t2.small"   # Small = 1 vCPU / 2GB
 # Ideally update to auto-pull the latest
-rhel_ami: ami-c998b6b2              # Rhel 7.4
-#windows_ami: ami-0a792a70           # Windows 2016 Base
-windows_ami: ami-013e197b           # Windows 2016 Base
+ec2_rhel_ami: ami-c998b6b2              # Rhel 7.4
+#ec2_windows_ami: ami-0a792a70           # Windows 2016 Base
+ec2_windows_ami: ami-013e197b           # Windows 2016 Base
 
 
 ##########################################################
