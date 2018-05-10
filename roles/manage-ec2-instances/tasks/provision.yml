@@ -442,7 +442,7 @@
   ec2_win_password:
     region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ key_file }}"
+    key_file: "{{ ec2_key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ dc_instances.results | map(attribute='tagged_instances') | list }}"
@@ -453,7 +453,7 @@
   ec2_win_password:
     region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ key_file }}"
+    key_file: "{{ ec2_key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ workstation_instances.results | map(attribute='tagged_instances') | list }}"
@@ -464,7 +464,7 @@
   ec2_win_password:
     region: '{{ ec2_region }}'
     instance_id: "{{ item.id }}"
-    key_file: "{{ key_file }}"
+    key_file: "{{ ec2_key_file }}"
     wait: yes
     wait_timeout: 45
   with_items: "{{ windows_instances.results | map(attribute='tagged_instances') | list }}"
