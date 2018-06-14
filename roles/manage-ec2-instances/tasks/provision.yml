@@ -260,17 +260,17 @@
     instance_type: "{{ ec2_windows_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ name_prefix + '-s' + item + '-win1'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ name_prefix + '-s' + item + 'win1'}}"
+      Name: "{{ name_prefix + '-s' + item + '-win1'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ ec2_windows_ami }}"
     wait: true
     region: "{{ ec2_region }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'win1')) }}"
+    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + '-win1')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: windows1_jobs
@@ -285,17 +285,17 @@
     instance_type: "{{ ec2_windows_workstation_instance_type }}"
     exact_count: 1
     count_tag:
-      Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ name_prefix + '-s' + item + '-work'}}"
       App: AnsibleWorkshop
     instance_tags:
-      Name: "{{ name_prefix + '-s' + item + 'workstation'}}"
+      Name: "{{ name_prefix + '-s' + item + '-work'}}"
       App: AnsibleWorkshop
       User: "{{ user_prefix + item }}"
     image: "{{ ec2_windows_ami }}"
     wait: true
     region: "{{ ec2_region }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
-    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + 'workstation')) }}"
+    user_data: "{{ lookup('template', 'win_ec2_user_data.j2', template_vars=dict(vm_name=name_prefix + '-s' + item + '-work')) }}"
     assign_public_ip: yes
   with_sequence: count={{user_count}}
   register: workstation_jobs

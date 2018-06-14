@@ -60,7 +60,7 @@
     region: "{{ ec2_region }}"
     filters:
       vpc-id: "{{ ec2_vpc_id }}"
-      "tag:Name": "{{ name_prefix + '-s' + item + 'win1'}}"
+      "tag:Name": "{{ name_prefix + '-s' + item + '-win1'}}"
   with_sequence: count={{user_count}}
   register: ec2_windows_instances
 
@@ -79,7 +79,7 @@
     region: "{{ ec2_region }}"
     filters:
       vpc-id: "{{ ec2_vpc_id }}"
-      "tag:Name": "{{ name_prefix + '-s' + item + 'workstation'}}"
+      "tag:Name": "{{ name_prefix + '-s' + item + '-work'}}"
   with_sequence: count={{user_count}}
   register: ec2_workstation_instances
 
@@ -99,7 +99,7 @@
     name: "{{ name_prefix }}-towersg"
     state: absent
   register: result
-  until: result|success
+  until: result is success
   retries: 20
   delay: 10
 
@@ -108,7 +108,7 @@
     name: "{{ name_prefix }}-gitlabsg"
     state: absent
   register: result
-  until: result|success
+  until: result is success
   retries: 20
   delay: 10
 
@@ -117,7 +117,7 @@
     name: "{{ name_prefix }}-windcsg"
     state: absent
   register: result
-  until: result|success
+  until: result is success
   retries: 20
   delay: 10
 
@@ -126,7 +126,7 @@
     name: "{{ name_prefix }}-websg"
     state: absent
   register: result
-  until: result|success
+  until: result is success
   retries: 20
   delay: 10
 
@@ -135,6 +135,6 @@
     name: "{{ name_prefix }}-windowssg"
     state: absent
   register: result
-  until: result|success
+  until: result is success
   retries: 20
   delay: 10
