@@ -2,11 +2,14 @@
 
 # ----------------------- Destroy Tower Instances -----------------------
 - name: Destory Tower Instances
-  vsphere_guest:
-    vcenter_hostname: "{{ vCenterServer }}"
+  vmware_guest2:
+    hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
-    guest: "{{ name_prefix }}-s{{ item }}-tower"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-s{{ item }}-tower"
     validate_certs: false
     state: absent
     force: yes
@@ -14,33 +17,42 @@
 
 # ----------------------- Destroy Gitlab Instances -----------------------
 - name: Destory Gitlab Instances
-  vsphere_guest:
-    vcenter_hostname: "{{ vCenterServer }}"
+  vmware_guest2:
+    hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
-    guest: "{{ name_prefix }}-gitlab"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-gitlab"
     validate_certs: false
     state: absent
     force: yes
 
 # ----------------------- Destroy DC Instances -----------------------
 - name: Destory DC Instances
-  vsphere_guest:
-    vcenter_hostname: "{{ vCenterServer }}"
+  vmware_guest2:
+    hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
-    guest: "{{ name_prefix }}-dc"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-dc"
     validate_certs: false
     state: absent
     force: yes
 
 # ----------------------- Destroy Windows Instances -----------------------
 - name: Destory Windows Instances
-  vsphere_guest:
-    vcenter_hostname: "{{ vCenterServer }}"
+  vmware_guest2:
+    hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
-    guest: "{{ name_prefix }}-s{{ item }}-win1"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-s{{ item }}-win1"
     validate_certs: false
     state: absent
     force: yes
@@ -48,11 +60,14 @@
 
 # ----------------------- Destroy Workstation Instances -----------------------
 - name: Destory Workstation Instances
-  vsphere_guest:
-    vcenter_hostname: "{{ vCenterServer }}"
+vmware_guest2:
+    hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
-    guest: "{{ name_prefix }}-s{{ item }}-work"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-s{{ item }}-work"
     validate_certs: false
     state: absent
     force: yes
