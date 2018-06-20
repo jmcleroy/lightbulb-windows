@@ -60,7 +60,7 @@
 
 # ----------------------- Destroy Workstation Instances -----------------------
 - name: Destory Workstation Instances
-vmware_guest2:
+  vmware_guest2:
     hostname: "{{ vCenterServer }}"
     username: "{{ vCenterUsername }}"
     password: "{{ vCenterPassword }}"
