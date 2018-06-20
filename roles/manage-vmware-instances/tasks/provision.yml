@@ -30,8 +30,11 @@
       runonce:
       - powershell.exe -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\ConfigureRemotingForAnsible.ps1"
       - powershell.exe -ExecutionPolicy Unrestricted -File C:\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+      - powershell.exe -command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' –Value 0"
+      - powershell.exe -command "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"
       - winrm set winrm/config/service/auth @{Basic="true"}
       - winrm set winrm/config/service @{AllowUnencrypted="true"}
+      - powershell.exe -command "New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\services\TCPIP6\Parameters -Name DisabledComponents -PropertyType DWord -Value 0xffffffff"
   with_sequence: count=1
   register: dc_jobs
   async: 7200
@@ -117,8 +120,11 @@
       runonce:
       - powershell.exe -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\ConfigureRemotingForAnsible.ps1"
       - powershell.exe -ExecutionPolicy Unrestricted -File C:\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+      - powershell.exe -command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' –Value 0"
+      - powershell.exe -command "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"
       - winrm set winrm/config/service/auth @{Basic="true"}
       - winrm set winrm/config/service @{AllowUnencrypted="true"}
+      - powershell.exe -command "New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\services\TCPIP6\Parameters -Name DisabledComponents -PropertyType DWord -Value 0xffffffff"
   with_sequence: count={{user_count}}
   register: windows1_jobs
   async: 7200
@@ -156,8 +162,11 @@
       runonce:
       - powershell.exe -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\ConfigureRemotingForAnsible.ps1"
       - powershell.exe -ExecutionPolicy Unrestricted -File C:\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+      - powershell.exe -command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' –Value 0"
+      - powershell.exe -command "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"
       - winrm set winrm/config/service/auth @{Basic="true"}
       - winrm set winrm/config/service @{AllowUnencrypted="true"}
+      - powershell.exe -command "New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\services\TCPIP6\Parameters -Name DisabledComponents -PropertyType DWord -Value 0xffffffff"
   with_sequence: count={{user_count}}
   register: workstation_jobs
   async: 7200
@@ -302,8 +311,10 @@
 - name: Workstation | Add new instance to host group
   add_host:
     hostname: "{{ item.hw_name|replace(name_prefix + '-', '') }}"
-    ansible_host: "{{ item.hw_eth0.ipaddresses[0]  }}"
-    private_ip: "{{ item.hw_eth1.ipaddresses[1] }}"
+#    ansible_host: "{{ item.hw_eth0.ipaddresses[0]  }}"
+#    private_ip: "{{ item.hw_eth1.ipaddresses[1] }}"
+    ansible_host: "{{ item.ipv4  }}"
+    private_ip: "{{ item.ipv4 }}"
     ansible_port: 5986
     ansible_user: "Administrator"
     ansible_password: "{{ domain_admin_password }}"
