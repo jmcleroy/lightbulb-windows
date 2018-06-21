@@ -318,6 +318,7 @@
     ansible_port: 5986
     ansible_user: "Administrator"
     ansible_password: "{{ domain_admin_password }}"
+    ansible_become_password: "{{ users_password }}"
     ansible_connection: "winrm"
     ansible_winrm_transport: "basic"
     ansible_winrm_server_cert_validation: "ignore"
