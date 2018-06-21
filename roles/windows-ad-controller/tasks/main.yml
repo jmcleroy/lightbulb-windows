@@ -264,8 +264,8 @@
     password: "{{ users_password }}"
     update_password: on_create
     password_expired: false
-    firstname: user
-    surname: user
+    firstname: "{{ user_prefix }}"
+    surname: "{{ item }}"
     company: AnsibleByRedHat
     email: "{{user_prefix}}{{ item }}@{{ dns_domain_name }}"
   with_sequence: count="{{ user_count }}"
