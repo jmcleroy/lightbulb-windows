@@ -16,38 +16,11 @@
     - git
     - putty.install
     - firefox
-    #- googlechrome
+    - googlechrome
     - winscp
-#    - cygwin
-#    - cyg-get
     #- atom
     #- notepadplusplus.install
     #- sublimetext3
-
-#- name: Install extra Cygwin Modules
-#  win_command: cyg-get.bat curl cygwin32-gcc-g++ gcc-core gcc-g++ git libffi-devel make nano openssl openssl-devel python-crypto python2 python2-devel python2-openssl python2-pip python2-setuptools python-pywinrm tree
-#  args:
-#    chdir: C:\ProgramData\chocolatey\bin\
-
-#- name: Install Ansible
-#  win_command: bash.exe -l -c "pip2 install ansible"
-#  args:
-#    chdir: c:\tools\cygwin\bin\
-
-#- name: Create Ansible Config directory
-#  win_file:
-#    path: C:\tools\cygwin\etc\ansible
-#    state: directory
-
-#- name: Copy Ansible Config file
-#  win_copy:
-#    src: files/ansible.cfg
-#    dest: C:\tools\cygwin\etc\ansible\ansible.cfg
-
-#- name: Copy sshpass.exe to workstation
-#  win_copy:
-#    src: files/sshpass.exe
-#    dest: C:\tools\cygwin\bin\sshpass.exe
 
 - name: Add Putty Shortcut to administrator desktop
   win_shortcut:
@@ -68,3 +41,4 @@
 - name: Set git to cache credentials
   win_command: git config --global credential.helper wincred
 
+#- include_tasks: ansible.yml
