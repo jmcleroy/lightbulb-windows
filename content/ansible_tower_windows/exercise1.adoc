@@ -50,8 +50,8 @@ Click on ADD     image:at_add.png[Add,35,25]
 Complete the form using the following entries:
 
 |===
-|NAME |Ansible Workshop Credential
-|DESCRIPTION|Machine credential
+|NAME |Student Account
+|DESCRIPTION|
 |ORGANIZATION|Default
 |TYPE|Machine
 |USERNAME| student#
@@ -112,8 +112,8 @@ Complete the form using the following entries (using your student number)
 |SCM UPDATE OPTIONS
 a|
 
-- [*] Clean
-- [*] Delete on Update
+- [ ] Clean
+- [ ] Delete on Update
 - [*] Update on Launch
 |===
 
@@ -130,57 +130,65 @@ Select SAVE     image:at_save.png[Save,35,25]
 
 
 
-== Creating a Inventory
+== Inventories
 
 An inventory is a collection of hosts against which jobs may be launched.
 Inventories are divided into groups and these groups contain the actual hosts.
-Groups may be sourced manually, by entering host names into Tower, or from one
-of Ansible Tower’s supported cloud providers.
+Inventories may be sourced manually, by entering host names into Tower, or from one
+of Ansible Tower's supported cloud providers.
 
 A static Inventory has already been created for you today.  We will now take a look at this inventory to show case the various features.
 
 === Step 1:
 
-Click on INVENTORIES
+Click on INVENTORIES up top.  You will see the preconfigured Inventory listed.  Click on the Inventories' name *Ansible Workshop Inventory* or on the Edit button. image:at_edit.png[Edit,35,35]
 
 === Step 2:
 
-Select ADD and select Inventory    image:at_add.png[Add,35,25]
+You will now be viewing the Inventory.  From here you can add Hosts, Groups, or even add Variables specific to this Inventory.
+
+image::1-tower-edit-inventory.png[title="Edit Inventory",width=1000]
+
+We will be viewing the hosts, so click on the *HOSTS* button.
 
 === Step 3:
 
-Complete the form using the following entries
+In the Hosts view, we can see every host associated with with this inventory.  You will also see which groups a host is associated with.
+Hosts can be associated with multiple groups.  These groups can later then be used to narrow down to the exact hosts we will later run our playbooks on.
 
-|===
-|NAME |Ansible Workshop Inventory
-|DESCRIPTION|workshop hosts
-|ORGANIZATION|Default
-|===
-
-
-
-image::1-tower-create-inventory.png[title="Create an Inventory",width=1000]
-
+image::1-tower-hosts-view.png[title="Hosts View",width=1000]
 
 
 === Step 4:
 
-Select SAVE     image:at_save.png[Save,35,25]
+If you click on the Host's name or on the Edit Button image:at_edit.png[Edit,35,35] we will be able to look at variables specific to this host.
+
+image::1-tower-host-edit.png[title="Host Edit",width=1000]
 
 
+Today we have already setup various variables to tell Ansible that this host is a Windows machine.  You do not have to define these variables as a Host variable here, 
+they could also be Group variables or reside directly in your Template or Playbook.  We will place them here for simplicities sake.
+By default Ansible will attempt to use SSH to connect to any Host, so for Windows we need to tell it utilize a different connection method.
+
+*ansible_connection: winrm*
+
+In our example we tell Ansible to connect to the WinRM SSL Port 5986.  The nonSSL port runs on 5985 but is unecrypted.
+
+*ansible_port: 5986*
+
+We also tell Ansible to ignore the WinRM cert, since our lab doesn't have a proper certificate store setup.
+
+*ansible_winrm_server_cert_validation: ignore*
+
+Windows also has various authentication methods that we can utlize to connect.  Here we tell Ansible to use the *CredSSP* Transport Method to authenticate to our Windows host.
+
+*ansible_winrm_transport: credssp*
 
 
-
-
-
-
-
-
-image::at_inv_group.png[title="Inventory with Groups"]
-
-=== Step 7:
+You can find more information about these and other settings in our link:https://docs.ansible.com/ansible/latest/user_guide/windows.html[Windows Guides].
+The authentication settings are particularly important and you will need to review them and decide which method is best for your needs.
 
 
 === End Result
 
-At this point, we are doing with our basic configuration of Ansible Tower.  In exercise 2, we will be solely focused on creating and running a job template so you can see Tower in action.
+At this point, we are doing with our basic configuration of Ansible Tower.  In exercise 2, we will now run a few Ad-Hoc commands against these hosts.
