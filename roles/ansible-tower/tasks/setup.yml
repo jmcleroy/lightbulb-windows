@@ -85,6 +85,7 @@
     status_code:
       - 200
       - 201
+      - 202
       - 204
       - 400
       - 404
@@ -101,6 +102,7 @@
     status_code:
       - 200
       - 201
+      - 202
       - 204
       - 400
       - 404
@@ -117,6 +119,7 @@
     status_code:
       - 200
       - 201
+      - 202
       - 204
       - 400
       - 404
@@ -133,6 +136,7 @@
     status_code:
       - 200
       - 201
+      - 202
       - 204
       - 400
       - 404
@@ -146,6 +150,22 @@
     user: admin
     password: "{{ towerpass }}"
     body: "{{ lookup('file','tower_inventory.json') }}"
+    body_format: json
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 400
+  register: response
+  changed_when: response.status == 201
+
+- name: create group
+  uri:
+    url:  https://localhost/api/v2/groups/
+    method: POST
+    user: admin
+    password: "{{ towerpass }}"
+    body: "{{ lookup('template','tower_group.json.j2') }}"
     body_format: json
     validate_certs: False 
     status_code:
@@ -170,6 +190,23 @@
       - 400
   register: response
   changed_when: response.status == 201
+
+- name: Associate host to group
+  uri:
+    url:  https://localhost/api/v2/groups/1/hosts/
+    method: POST
+    user: admin
+    password: "{{ towerpass }}"
+    body: '{ "id": 2 }'
+    body_format: json
+    validate_certs: False 
+    status_code:
+      - 200
+      - 204
+      - 400
+  register: response
+  changed_when: response.status == 204
+
 
 - name: Disable GIT Cert validation
   lineinfile:
