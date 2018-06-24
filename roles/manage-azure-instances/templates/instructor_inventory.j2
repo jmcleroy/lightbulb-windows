@@ -29,12 +29,18 @@ ansible_ssh_user={{ root_user }}
 ansible_port=22
 ansible_ssh_user={{ root_user }}
 
+[docs:vars]
+ansible_port=22
+ansible_ssh_user={{ root_user }}
+
 
 [instructor]
 {% for host in hostvars %}
 {%   if "windc" in host %}
 {{ host|replace(name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_host }} ansible_user={{ hostvars[host].ansible_user }}  ansible_password="{{ hostvars[host].ansible_password }}"
 {%   elif "gitlab" in host %}
+{{ host|replace(name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_ssh_host }}
+{%   elif "docs" in host %}
 {{ host|replace(name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_ssh_host }}
 {%   endif %}
 {% endfor %}
@@ -44,6 +50,7 @@ ansible_ssh_user={{ root_user }}
 {%   for host in hostvars %}
 {%     if "windc" in host -%}
 {%     elif "gitlab" in host -%}
+{%     elif "docs" in host -%}
 {%     elif "tower" in host %}
 {{ host|replace(name_prefix + "-", "") }} ansible_host={{ hostvars[host].ansible_ssh_host }} 
 {%     else %}

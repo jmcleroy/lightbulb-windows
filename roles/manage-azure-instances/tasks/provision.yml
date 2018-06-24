@@ -118,7 +118,7 @@
       offer: "{{ azure_win_offer }}"
       version: "{{ azure_win_version }}"
       sku: "{{ azure_win_sku }}"
-  with_sequence: count={{user_count}}
+  with_sequence: count={{ user_count }}
   register: windows1_jobs
   async: 7200
   poll: 0    
@@ -154,7 +154,7 @@
       offer: "{{ azure_win_offer }}"
       version: "{{ azure_win_version }}"
       sku: "{{ azure_win_sku }}"
-  with_sequence: count={{user_count}}
+  with_sequence: count={{ user_count }}
   register: workstation_jobs
   async: 7200
   poll: 0  
@@ -189,7 +189,7 @@
       offer: "{{ azure_rhel_offer }}"
       version: "{{ azure_rhel_version }}"
       sku: "{{ azure_rhel_sku }}"
-  with_sequence: count={{user_count}}
+  with_sequence: count={{ user_count }}
   register: tower_jobs
   async: 7200
   poll: 0  
@@ -225,10 +225,46 @@
       offer: "{{ azure_rhel_offer }}"
       version: "{{ azure_rhel_version }}"
       sku: "{{ azure_rhel_sku }}"
-  with_sequence: count={{user_count}}
+  with_sequence: count=1
   register: gitlab_jobs
   async: 7200
-  poll: 0  
+  poll: 0
+
+- name: Docs | Launch Instance
+  azure_rm_virtualmachine:
+    client_id: "{{ azure_client_id }}"
+    secret: "{{ azure_secret }}"
+    subscription_id: "{{ azure_subscription_id }}"
+    tenant: "{{ azure_tenant }}"
+    resource_group: "{{ azure_resource_group }}"
+    name: "{{ name_prefix + '-s' + item + '-docs'}}"
+    vm_size: "{{ azure_gitlab_instance_type }}"
+    storage_account_name: "{{ azure_storage_account }}"
+    admin_username: "{{ azure_admin_user }}"
+    admin_password: "{{ azure_admin_pass }}"
+    started: True
+    state: present
+    public_ip_allocation_method: Dynamic
+    virtual_network_name: "{{ azure_virtual_network }}"
+    subnet_name: "{{ azure_virtual_subnet }}"
+    open_ports:
+      - 22
+      - 80
+      - 8080
+      - 443
+    tags:
+      Name: "{{ name_prefix + '-s' + item + '-docs'}}"
+      App: AnsibleWorkshop
+      User: "{{ user_prefix + item }}"
+    image:
+      publisher: "{{ azure_rhel_publisher }}"
+      offer: "{{ azure_rhel_offer }}"
+      version: "{{ azure_rhel_version }}"
+      sku: "{{ azure_rhel_sku }}"
+  with_sequence: count=1
+  register: docs_jobs
+  async: 7200
+  poll: 0
 
 ################### Wait for Jobs ###################
 
@@ -245,6 +281,13 @@
   until: gitlab_instances.finished
   retries: 300
   with_items: "{{ gitlab_jobs.results }}"
+
+- name: Wait for docs instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: docs_instances
+  until: docs_instances.finished
+  retries: 300
+  with_items: "{{ docs_jobs.results }}"
 
 - name: Wait for DC instance creation to complete
   async_status: jid="{{ item.ansible_job_id }}"
@@ -339,6 +382,15 @@
     state: started
   with_items: "{{ gitlab_instances.results }}"  
 
+- name: Docs | Wait for SSH to come up
+  wait_for:
+    host: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+    port: 22
+    delay: 1
+    timeout: 320
+    state: started
+  with_items: "{{ docs_instances.results }}"  
+
 - name: DomainController | Wait for WinRM to come up
   wait_for:
     host: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
@@ -386,7 +438,17 @@
     ansible_password: "{{ azure_admin_pass }}"    
     private_ip: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
     groups: gitlab
-  with_items: "{{ gitlab_instances.results }}"  
+  with_items: "{{ gitlab_instances.results }}"
+
+- name: Docs | Add new instance to host group  
+  add_host:  
+    hostname: "{{ item.invocation.module_args.name }}"  
+    ansible_ssh_host: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+    ansible_user: "{{ azure_admin_user }}"
+    ansible_password: "{{ azure_admin_pass }}"    
+    private_ip: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+    groups: docs
+  with_items: "{{ docs_instances.results }}"  
 
 - name: DomainController | Add new instance to host group
   add_host:

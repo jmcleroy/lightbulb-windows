@@ -29,6 +29,20 @@
     state: absent
     force: yes
 
+# ----------------------- Destroy Docs Instances -----------------------
+- name: Destory Docs Instances
+  vmware_guest2:
+    hostname: "{{ vCenterServer }}"
+    username: "{{ vCenterUsername }}"
+    password: "{{ vCenterPassword }}"
+    datacenter: "{{ vCenterDatacenter }}"
+    cluster: "{{ vCenterCluster }}"
+    folder: "{{ vCenterFolder }}"
+    name: "{{ name_prefix }}-docs"
+    validate_certs: false
+    state: absent
+    force: yes
+
 # ----------------------- Destroy DC Instances -----------------------
 - name: Destory DC Instances
   vmware_guest2:

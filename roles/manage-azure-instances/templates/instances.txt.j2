@@ -24,6 +24,7 @@ ansible_ssh_user={{ root_user }}
 {% for host in hostvars %}
 {%   if "windc" in host -%}
 {%   elif "gitlab" in host -%}
+{%   elif "docs" in host -%}
 {%   elif "tower" in host %}
 {{ host }} ansible_host={{ hostvars[host].ansible_ssh_host }} 
 {%   else %}
@@ -33,6 +34,7 @@ ansible_ssh_user={{ root_user }}
 
 {% for group in groups %}
 {%   if "gitlab" in group -%}
+{%   elif "docs" in group -%}
 {%   elif "windows_domain_controllers" in group -%}
 {%   else %}
 [{{group}}]
@@ -42,6 +44,7 @@ ansible_ssh_user={{ root_user }}
 {%       if entry == host %}
 {%         if "windc" in host -%}
 {%         elif "gitlab" in host -%}
+{%         elif "docs" in host -%}
 {%         else %}
 {{ host }} 
 {%         endif %}

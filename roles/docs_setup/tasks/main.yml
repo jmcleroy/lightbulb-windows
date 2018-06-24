@@ -1,0 +1,45 @@
+- name: Install asciidoc packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - asciidoc
+    - rubygem-asciidoctor
+
+- name: Install asciidoctor-pdf Gem
+  gem:
+    name: asciidoctor-pdf
+    version: 1.5.0.alpha.6
+    state: present
+
+- name: Copy content to server
+  copy:
+    src: content/ansible_tower_windows/
+    dest: /tmp/content
+  register: copycontent
+
+- name: Copy images content to server
+  copy:
+    src: content/ansible_tower_windows/images/
+    dest: /usr/share/nginx/html/images
+
+- name: Build HTML Docs
+  command: asciidoc -d book -v -o index.html index.adoc
+  args:
+    chdir: /tmp/content/
+  when: copycontent.changed
+
+- name: Build PDF Docs
+  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
+  args:
+    chdir: /tmp/content/
+  when: copycontent.changed
+
+- name: Copy content to server
+  copy:
+    src: /tmp/content/{{ item }}
+    dest: /usr/share/nginx/html/{{ item }}
+    remote_src: yes
+  with_items:
+    - index.html
+    - aww.pdf
