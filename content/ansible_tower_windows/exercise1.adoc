@@ -1,5 +1,3 @@
-:cred_url: http://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html#credential-types
-
 include::header.adoc[]
 
 = Exercise 1 - Configuring Ansible Tower
@@ -8,8 +6,8 @@ In this exercise, we are going to configure Tower so that we can run a playbook.
 
 == Configuring Ansible Tower
 
-There are a number of contructs in the Ansible Tower UI that enable multi-tenancy, notifications, scheduling, etc.
-However, we are only going to focus on a few of the key contructs that are required for this workshop today.
+There are a number of constructs in the Ansible Tower UI that enable multi-tenancy, notifications, scheduling, etc.
+However, we are only going to focus on a few of the key constructs that are required for this workshop today.
 
 * Credentials
 * Projects
@@ -31,8 +29,8 @@ Your Ansible Tower license has already been applied for you, so after logging in
 Credentials are utilized by Tower for authentication when launching jobs against machines,
 synchronizing with inventory sources, and importing project content from a version control system.
 
-There are many link:{cred_url}[types of credentials] including machine, network, and various cloud providers.  In this
-workshop, we are using a *machine* credential.
+There are many link:http://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html#credential-types[types of credentials] 
+including machine, network, and various cloud providers.  In this workshop, we are using a *machine* credential.
 
 
 === Step 1:
@@ -52,15 +50,15 @@ Click on ADD     image:at_add.png[Add,35,25]
 Complete the form using the following entries:
 
 |===
-|NAME |Git Credential
-|DESCRIPTION|SCM credential for playbook sync
+|NAME |Ansible Workshop Credential
+|DESCRIPTION|Machine credential
 |ORGANIZATION|Default
-|TYPE|Source Control
+|TYPE|Machine
 |USERNAME| student#
 |PASSWORD| <your AD account password - instructor provided>
 |===
 
-image::2.1-tower-add-machine-credential.png[title="Add Machine Credential",width=1000]
+image::1-tower-add-machine-credential.png[title="Add Machine Credential",width=1000]
 
 
 === Step 5:
@@ -72,17 +70,17 @@ Select SAVE     image:at_save.png[Save,35,25] +
 Our first credential was to access our Windows machines.  We need another to access our source code repository.  Repeat the process as above, but with the following details:
 
 |===
-|NAME |Ansible Workshop Credential
-|DESCRIPTION|Machine credential for run job templates during workshop
+|NAME |Git Credential
+|DESCRIPTION|SCM credential for playbook sync
 |ORGANIZATION|Default
-|TYPE|Machine
+|TYPE|Source Control
 |USERNAME| student#
 |PASSWORD| <your AD account password - instructor provided>
 |===
 
 Make sure you select SAVE!
 
-image::2.1-tower-add-scm-credential.png[title="Add SCM Credential",width=1000]
+image::1-tower-add-scm-credential.png[title="Add SCM Credential",width=1000]
 
 == Creating a Project
 
@@ -101,7 +99,7 @@ Select ADD     image:at_add.png[Add,35,25]
 
 === Step 3:
 
-Complete the form using the following entries (using your student number
+Complete the form using the following entries (using your student number)
 
 |===
 |NAME |Ansible Workshop Project
@@ -121,7 +119,7 @@ a|
 
 
 
-image::2.1-tower-create-project.png[title="Defining a Project",width=1000]
+image::1-tower-create-project.png[title="Defining a Project",width=1000]
 
 
 
@@ -139,9 +137,7 @@ Inventories are divided into groups and these groups contain the actual hosts.
 Groups may be sourced manually, by entering host names into Tower, or from one
 of Ansible Tower’s supported cloud providers.
 
-An Inventory can also be imported into Tower using the `tower-manage` command
-and this is how we are going to add an inventory for this workshop.
-
+A static Inventory has already been created for you today.  We will now take a look at this inventory to show case the various features.
 
 === Step 1:
 
@@ -163,7 +159,7 @@ Complete the form using the following entries
 
 
 
-image::2.1-tower-create-inventory.png[title="Create an Inventory",width=1000]
+image::1-tower-create-inventory.png[title="Create an Inventory",width=1000]
 
 
 
@@ -184,9 +180,7 @@ image::at_inv_group.png[title="Inventory with Groups"]
 
 === Step 7:
 
-TODO - Update the inventory in tower to use ansible_winrm_transport: kerberos
-TODO - Test with credssp as well?  Do I need to enable that with the powershell script with special options?
 
 === End Result
 
-At this point, we are doing with our basic configuration of Ansible Tower.  In exercise 2.2, we will be solely focused on creating and running a job template so you can see Tower in action.
+At this point, we are doing with our basic configuration of Ansible Tower.  In exercise 2, we will be solely focused on creating and running a job template so you can see Tower in action.
