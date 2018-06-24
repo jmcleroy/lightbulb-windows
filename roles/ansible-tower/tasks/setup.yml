@@ -72,6 +72,41 @@
     body_format: json
     validate_certs: False
 
+- set_fact:
+    userid: "{{ inventory_hostname | regex_replace('[^0-9]', '') }}"
+
+- name: create inventory
+  uri:
+    url:  https://localhost/api/v2/inventories/
+    method: POST
+    user: admin
+    password: "{{ towerpass }}"
+    body: "{{ lookup('file','tower_inventory.json') }}"
+    body_format: json
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 400
+  register: response
+  changed_when: response.status == 201
+
+- name: create host
+  uri:
+    url:  https://localhost/api/v2/hosts/
+    method: POST
+    user: admin
+    password: "{{ towerpass }}"
+    body: "{{ lookup('template','tower_host.json.js') }}"
+    body_format: json
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 400
+  register: response
+  changed_when: response.status == 201
+
 #- name: create project
 #  uri:
 #    url:  https://localhost/api/v1/projects/

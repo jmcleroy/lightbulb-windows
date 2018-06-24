@@ -216,8 +216,8 @@
   with_sequence: count={{ user_count }}
 
 - name: Create A record for Windows
-  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-win" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-win']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
-  when: "'s{{ item }}-win' not in arecords.stdout"
+  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-win1" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-win1']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  when: "'s{{ item }}-win1' not in arecords.stdout"
   with_sequence: count={{ user_count }}
 
 #- name: Get PTR Records for zone
