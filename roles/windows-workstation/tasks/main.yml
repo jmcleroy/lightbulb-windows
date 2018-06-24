@@ -32,6 +32,30 @@
       dest: '%Public%\Desktop\Putty.lnk'
       directory: '%ProgramFiles%\PuTTY\'
 
+  - name: Create an shortcut to Docs site
+    win_shortcut:
+      src: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'
+      dest: '%UserProfile%\Desktop\Workshop Docs.lnk'
+      args: --new-window http://docs.{{ dns_domain_name }}/
+      directory: '%ProgramFiles(x86)%\Google\Chrome\Application'
+      icon: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe,0'
+
+  - name: Create an shortcut to Tower site
+    win_shortcut:
+      src: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'
+      dest: '%UserProfile%\Desktop\Ansible Tower.lnk'
+      args: --new-window http://s1-tower.{{ dns_domain_name }}/
+      directory: '%ProgramFiles(x86)%\Google\Chrome\Application'
+      icon: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe,0'
+
+  - name: Create an shortcut to Ansible Docs site
+    win_shortcut:
+      src: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'
+      dest: '%UserProfile%\Desktop\Ansible Docs.lnk'
+      args: --new-window http://docs.ansible.com/
+      directory: '%ProgramFiles(x86)%\Google\Chrome\Application'
+      icon: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe,0'
+
   - name: Set git to cache credentials
     win_command: git config --global credential.helper manager
 
