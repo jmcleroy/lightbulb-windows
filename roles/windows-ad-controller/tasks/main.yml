@@ -212,12 +212,12 @@
 
 - name: Create A record for Towers
   win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-tower" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-tower']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
-  when: "'s{{ item }}-tower' not in arecords.stdout"
+  when: "'s' + item +'-tower' not in arecords.stdout"
   with_sequence: count={{ user_count }}
 
 - name: Create A record for Windows
   win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-win1" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-win1']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
-  when: "'s{{ item }}-win1' not in arecords.stdout"
+  when: "'s' + item +'-win1' not in arecords.stdout"
   with_sequence: count={{ user_count }}
 
 #- name: Get PTR Records for zone

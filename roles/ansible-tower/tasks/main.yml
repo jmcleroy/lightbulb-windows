@@ -113,14 +113,14 @@
   #no_log: true         # Uncomment this when in prod... (clear text)
   #changed_when: realm_join_cmd_result.rc != 100
   #failed_when: realm_join_cmd_result.rc not in [0, 100]
-  when: realmd_bound|failed
+  when: realmd_bound is failed
 
 - name: Add ad group to sudoers
   lineinfile:
     dest: /etc/sudoers
     line: "%Ansible\\ Users	ALL=(ALL)	NOPASSWD: ALL"
     insertafter: "^%wheel"
-  when: realmd_bound|failed
+  when: realmd_bound is failed
 
 - name: Get Kerberos Ticket
   command: echo -n "{{ domain_admin_password }}" | kinit Admin@{{ dns_domain_name | upper }}
