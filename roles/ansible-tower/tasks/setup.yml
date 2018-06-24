@@ -171,6 +171,14 @@
   register: response
   changed_when: response.status == 201
 
+- name: Disable GIT Cert validation
+  lineinfile:
+    path: /etc/tower/settings.py
+    regexp: 'GIT_SSL_NO_VERIFY'
+    line: "AWX_TASK_ENV['GIT_SSL_NO_VERIFY'] = 'True'"
+  notify: restart tower
+
+
 #- name: create project
 #  uri:
 #    url:  https://localhost/api/v1/projects/
