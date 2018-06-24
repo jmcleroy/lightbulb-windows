@@ -27,17 +27,20 @@
     "AUTH_LDAP_REQUIRE_GROUP": "",
     "AUTH_LDAP_DENY_GROUP": null,
     "AUTH_LDAP_USER_FLAGS_BY_GROUP": {
+        "is_superuser": "CN=Ansible Users,CN=Users,DC=ansibleworkshop,DC=com"
     },
     "AUTH_LDAP_ORGANIZATION_MAP": {
         "Default": {
-            "admins": "CN=Ansible Users,CN=Users,DC=lab,DC=rhlabs,DC=net",
+            "admins": "CN=Ansible Users,CN=Users,DC=ansibleworkshop,DC=com",
             "remove_admins": true,
             "users": [
-                "CN=Domain Users,CN=Users,DC=lab,DC=rhlabs,DC=net"
+                "CN=Domain Users,CN=Users,DC=ansibleworkshop,DC=com"
             ],
             "remove_users": true
         }
     },
     "AUTH_LDAP_TEAM_MAP": {
     }
+{
+
 }
