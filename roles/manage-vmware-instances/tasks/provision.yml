@@ -80,6 +80,9 @@
     state: poweredon
     wait_for_ip_address: true
     validate_certs: false
+    hardware:
+      memory_mb: 4096
+      num_cpus: 2
     networks:
     - name: "{{ vCenterPortGroup }}"
       type: dhcp
@@ -105,6 +108,9 @@
     state: poweredon
     wait_for_ip_address: true
     validate_certs: false
+    hardware:
+      memory_mb: 4096
+      num_cpus: 2
     networks:
     - name: "{{ vCenterPortGroup }}"
       type: dhcp
