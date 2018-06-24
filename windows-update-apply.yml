@@ -1,6 +1,6 @@
 # windows-updates.yml
 
-- hosts: windows_workstations,windows
+- hosts: windows_workstations
 
   tasks:
     - name: Check for missing updates.
