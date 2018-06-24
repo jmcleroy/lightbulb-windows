@@ -210,6 +210,11 @@
   win_shell: Add-DnsServerResourceRecordA -Name "docs" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['docs']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'docs' not in arecords.stdout"
 
+- name: Create A record for Towers
+  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-tower" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-tower']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  when: "'s{{ item }}-tower' not in arecords.stdout"
+  with_sequence: count={{ user_count }}
+
 #- name: Get PTR Records for zone
 #  win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
 #  register: ptr_records
