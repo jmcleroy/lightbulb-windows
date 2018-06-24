@@ -26,50 +26,42 @@ All of our playbooks will be stored in a single git *repository*. Multiple users
 
 == Overview
 
-Starting at this task we are going to work from our *workstation* host.  We will use Visual Studio Code as our editor.  In addition, we will use GitLab for source code control.
+Starting at this task we are going to use Visual Studio Code as our editor.  In addition, we will use GitLab for source code control.
 This will allow us to minimize development work on the linux command line.  Other editors or source code solutions can be used, but this will show the general workflow.
 
 == Section 1: Creating a Directory Structure and Files for your Playbook
 
-There is a link:{dir_url}[best practice] on the preferred directory structures for playbooks.  We strongly encourage
-you to read and understand these practices as you develop your Ansible ninja skills.  That said,
-our playbook today is very basic and a complex directory structure is not necessary.
+There is a link:{dir_url}[best practice] on the preferred directory structures for playbooks.  We strongly encourage you to read and understand these practices as 
+you develop your Ansible skills.  That said, our playbook today is very basic and a complex directory structure is not necessary.
 
 Instead, we are going to create a very simple directory structure for our playbook, and add just a couple of files.
 
 
 *Step 1:* Open Visual Studio Code and Clone an empty git repository
 
-When you open Visual Studio Code, a 'Welcome' screen will load.  Choose `Firefox` when prompted for a default browser (and don't import anything).  You can close the browser for now.
+When you open Visual Studio Code, a 'Welcome' screen will load.  Choose `Chrome` when prompted for a default browser (and don't import anything).  You can close the browser for now.
 
 [NOTE]
-Internet Explorer 11 has some issues with Ansible Tower in the later labs.  Due to this we will use Firefox in these examples.
-
-To begin, we must clone the repository from the GitLab server. Open the command pallet by clicking `View` > `Command Pallet` or `Ctrl+Shift+P`.
-A text box will appear at the top of the editor and we will search for `Git: Clone` by typing into the box. Once highlighted, click `Git: Clone` to activate.
-
-Enter the Repository URL into the Command Pallet. The URL is https://gitlab/student#/student#-playbooks.git, where # is your student number.
-When it prompts you for directory, leave the default (C:\Users\student#)
-
-You will see the progress spin in the bottom left corner.  Eventually you will be prompted for your gitlab user/password.  (Watch the Command Pallet for the prompt)  Use your AD credentials (<domain>\student#)
-
-image::1.1-vscode-gitclonepassword.png[title="Git Clone Password",width=1000]
+Internet Explorer has some issues with Ansible Tower and is unsupported.  Due to this we will use Chrome in these examples.
 
 
-Once synced, click the `Open Repository` button at the top.
+For this lab, we have already created a clone of your Git repo for you.  It is located in your Documents folder, the full path will look like this (with the # replaced with your student number)
+'C:\Users\student#\Documents\student#'
 
-At this point in the Explorer sidebar you should have a 'student#-playbooks' section with no files.
+To access it, in Visual Code click on 'File' and then 'Open Folder'.  It should default to your documents folder, so select your student folder and press the 'Select Folder' button.
 
-image::1-1-vscode-studentplaybooks.png[title="Student Playbooks Repo",width=1000]
+At this point in the Explorer sidebar you should have a 'student#' section with only a README file in it.
+
+image::3-vscode-open-folder.png[title="Student Playbooks Repo",width=1000]
 
 *Step 2:* Create a directory called *iis_basic* and a file called `install_iis.yml`
 
-Hover over the 'student#-playbooks' section and click on the 'New Folder' button. Create a folder called `iis_basic`.  Then click on that folder so it is selected.
+Hover over the 'student#' section and click on the 'New Folder' button. Create a folder called `iis_basic`.  Then click on that folder so it is selected.
 Right click on the new folder you've created and create a file called `install_iis.yml`.
 
 You should now have an editor open in the right pane that can be used for creating your playbook.
 
-image::1.1-vscode-emptyinstall_iis.yml.png[title="Empty install_iis.yml",width=1000]
+image::3-vscode-create-folders.png[title="Empty install_iis.yml",width=1000]
 
 == Section 2: Defining Your Play
 
@@ -157,21 +149,20 @@ Click on the Source Code icon as shown below (It is the middle on the far left o
 Type in a commit message such as 'Adding install_iis.yml' in the text box at the top of the sidebar. Click the check box above to commit.
 This message is intended to describe the changes you made so that others (including yourself) better understand what is changing when comparing versions.
 
-image::1.1-vscode-install_iis.yml_commit.png[title="Git Commit install_iis.yml",width=1000]
+image::3-vscode-commit.png[title="Git Commit install_iis.yml",width=1000]
 
 This will prompt to ask if you want to stage the changes.  Click on `Always` and you won't be prompted again.
 
-image::1.1-vscode-stage_commits_always.png[title="Stage Commits Always",width=600]
+image::3-vscode-commit-always.png[title="Stage Commits Always"]
 
 Now you need to push the committed changes to your repository.
 
 On the bottom left blue bar, click the cloud with the up arrow on it to publish changes.
 
-Next in the top of the window it will prompt you to pick a remote to publish to.  Choose the default (`origin`)
+image::3-vscode-push.png[title="Git Push Origin"]
 
-image::1.1-vscode-gitpush_origin.png[title="Git Push Origin",width=1000]
 
-This may take as long as 30 seconds to push.  If you're interested in validating the code is in git, you can connect to gitlab to verify.  Open `Firefox` and connect to `https://gitlab`.  Login with your AD user (student#) and password and you should see your repo.
+This may take as long as 30 seconds to push.  If you're interested in validating the code is in git, you can connect to gitlab to verify.  Open `Chrome` and connect to `https://gitlab.ansibleworkshop.com`.  Login with your AD user (student#) and password and you should see your repo.
 
 You are ready to automate!
 
