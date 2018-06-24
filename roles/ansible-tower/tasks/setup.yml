@@ -75,6 +75,70 @@
 - set_fact:
     userid: "{{ inventory_hostname | regex_replace('[^0-9]', '') }}"
 
+- name: Delete demo inventory
+  uri:
+    url:  https://localhost/api/v2/inventories/1/
+    method: DELETE
+    user: admin
+    password: "{{ towerpass }}"
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 204
+      - 400
+      - 404
+  register: response
+  changed_when: response.status == 204
+
+- name: Delete demo project
+  uri:
+    url:  https://localhost/api/v2/projects/4/
+    method: DELETE
+    user: admin
+    password: "{{ towerpass }}"
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 204
+      - 400
+      - 404
+  register: response
+  changed_when: response.status == 204
+
+- name: Delete demo template
+  uri:
+    url:  https://localhost/api/v2/job_templates/5/
+    method: DELETE
+    user: admin
+    password: "{{ towerpass }}"
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 204
+      - 400
+      - 404
+  register: response
+  changed_when: response.status == 204
+
+- name: Delete demo credential
+  uri:
+    url:  https://localhost/api/v2/credentials/1/
+    method: DELETE
+    user: admin
+    password: "{{ towerpass }}"
+    validate_certs: False 
+    status_code:
+      - 200
+      - 201
+      - 204
+      - 400
+      - 404
+  register: response
+  changed_when: response.status == 204
+
 - name: create inventory
   uri:
     url:  https://localhost/api/v2/inventories/
@@ -97,7 +161,7 @@
     method: POST
     user: admin
     password: "{{ towerpass }}"
-    body: "{{ lookup('template','tower_host.json.js') }}"
+    body: "{{ lookup('template','tower_host.json.j2') }}"
     body_format: json
     validate_certs: False 
     status_code:
