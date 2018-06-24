@@ -90,19 +90,19 @@
     win_command: git add C:\Users\{{ user }}\Documents\{{ user }}\README.md
     args:
       chdir: C:\Users\{{ user }}\Documents\{{ user }}
-    #when: initialize.changed
+    when: initialize.changed
 
   - name: Commit initial file
     win_command: git commit -m "Initialize"
     args:
       chdir: C:\Users\{{ user }}\Documents\{{ user }}
-    #when: initialize.changed
+    when: initialize.changed
 
   - name: Push initial commit
     win_command: git push
     args:
       chdir: C:\Users\{{ user }}\Documents\{{ user }}
-    #when: initialize.changed
+    when: initialize.changed
 
   - name: Set Chrome to default Browser
     win_shell: Set-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{{ item }}\UserChoice -name ProgId ChromeHTML
