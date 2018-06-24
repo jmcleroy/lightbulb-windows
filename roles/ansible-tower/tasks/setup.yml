@@ -207,6 +207,21 @@
   register: response
   changed_when: response.status == 204
 
+- name: Add win_shell/win_feature/win_reboot to allowed adhoc modules
+  uri:
+    url:  https://localhost/api/v2/settings/all/
+    method: PATCH
+    user: admin
+    password: "{{ towerpass }}"
+    body: "{{ lookup('template','tower_config_adhoc.json.j2') }}"
+    body_format: json
+    validate_certs: False 
+    status_code:
+      - 200
+      - 204
+      - 400
+  register: response
+  changed_when: response.status == 200
 
 - name: Disable GIT Cert validation
   lineinfile:
