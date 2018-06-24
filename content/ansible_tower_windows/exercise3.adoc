@@ -1,6 +1,5 @@
+include::header.adoc[]
 
-:icons: font
-:imagesdir: images
 
 :figure-caption!:
 :become_url: http://docs.ansible.com/ansible/become.html#new-command-line-options

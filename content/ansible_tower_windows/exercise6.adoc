@@ -1,6 +1,6 @@
 
-:icons: font
-:imagesdir: images
+include::header.adoc[]
+
 
 :var_prec_url: http://docs.ansible.com/ansible/latest/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 :dir_url: http://docs.ansible.com/ansible/playbooks_best_practices.html

@@ -1,25 +1,15 @@
-
-:icons: font
-:imagesdir: images
-
-:license_url: https://s3.amazonaws.com/ansible-tower-workshop-license/license
-:image_links: https://s3.amazonaws.com/ansible-workshop-bos.redhatgov.io/_images
 :cred_url: http://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html#credential-types
+
+include::header.adoc[]
 
 = Exercise 1 - Configuring Ansible Tower
 
-
-
-
 In this exercise, we are going to configure Tower so that we can run a playbook.
-
-
 
 == Configuring Ansible Tower
 
 There are a number of contructs in the Ansible Tower UI that enable multi-tenancy, notifications, scheduling, etc.
 However, we are only going to focus on a few of the key contructs that are required for this workshop today.
-
 
 * Credentials
 * Projects
@@ -27,75 +17,13 @@ However, we are only going to focus on a few of the key contructs that are requi
 * Job Template
 
 
+== Logging into Tower
 
+You will find a shortcut on your desktop named "Ansible Tower", click this to open your personal Ansible Tower instance in Chrome.
 
-== Logging into Tower and Installing the License Key
+Your Tower instance has already been pre-configured for LDAP Login, so use your student credentials without the domain name to login.
 
-
-=== Step 1:
-
-To log in, use the username `admin` and the password `ansibleWS`.  Note that typically AD/LDAP authentication would be setup.  However, that is beyond the scope of this workshop.
-
-As soon as you login, you will prompted to request a license or browse for an existing license file
-
-image::2.0-tower-license-prompt.png[title="Uploading a License",width=1000]
-
-
-
-=== Step 2:
-
-At the commandline in your Tower instance download the encrypted license file via the curl command.
-
-[source,bash]
-----
-curl -O https://s3.amazonaws.com/ansible-tower-workshop-license/license
-----
-
-Then Decrypt the license file via Ansible Vault.
-**The instructor should provide the password**
-
-[source,bash]
-----
-ansible-vault decrypt license
-
-...
-
-Vault password:
-----
-
-Now use curl to POST the license to the Tower API endpoint. Please edit this command to the use the `workshop_prefix` for your workshop. This command exports your workshop prefix so that the next command can use that data in the curl command.
-
-[source,bash]
-----
-export WORKSHOP_PREFIX=" "
-----
-
-Now send the `license` to Tower via the API.  Make certain to use your student number in the URL.
-
-[source,bash]
-----
-curl -k https://s#tower.ansibleworkshop.com/api/v1/config/ \
-     -H 'Content-Type: application/json' \
-     -X POST \
-     --data @license \
-     --user admin:ansibleWS
-----
-
-
-// === Step 3:
-
-// Back in the Tower UI, choose BROWSE image:at_browse.png[LicB,35,25] and upload your
-// recently downloaded license file into Tower.
-
-// === Step 4:
-
-// Select "_I agree to the End User License Agreement_"
-
-// === Step 5:
-
-// Click on SUBMIT image:at_submit.png[Sub,35,25]
-
-
+Your Ansible Tower license has already been applied for you, so after logging in you should now see the Dashboard.
 
 
 == Creating a Machine Credential
@@ -131,9 +59,6 @@ Complete the form using the following entries:
 |USERNAME| student#
 |PASSWORD| <your AD account password - instructor provided>
 |===
-
-[NOTE]
-Notice here we've made a change from our previous examples.  Previously we were using basic authentication with a local `Adminstrator` account.  Now we are switching to an AD user and Kerberos authentication.  We will also update our inventory variables to reflect Kerberos.
 
 image::2.1-tower-add-machine-credential.png[title="Add Machine Credential",width=1000]
 
@@ -183,7 +108,7 @@ Complete the form using the following entries (using your student number
 |DESCRIPTION|workshop playbooks
 |ORGANIZATION|Default
 |SCM TYPE|Git
-|SCM URL|https://gitlab.ansibleworkshop.com/student#/student#-playbooks.git
+|SCM URL|https://gitlab.ansibleworkshop.com/student#/student#.git
 |SCM BRANCH|
 |SCM CREDENTIAL|Git Credential
 |SCM UPDATE OPTIONS

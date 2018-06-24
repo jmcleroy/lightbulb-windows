@@ -1,16 +1,4 @@
-
-:domain_name: redhatgov.io
-:workshop_prefix: workshop
-:tower_url: https://{workshop_prefix}.*student_number*.{domain_name}
-:ssh_url: https://{workshop_prefix}.*student_number*.{domain_name}/wetty/ssh/ec2-user
-
-:icons: font
-:iconsdir: http://people.redhat.com/~jduncan/images/icons
-:imagesdir: images
-
-
-= Automation for Everyone
-
+include::header.adoc[]
 
 
 == Today's Agenda
@@ -78,18 +66,4 @@ This document was created by and for Red Hat, Inc. It is being released under li
 You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 
 include::setup.adoc[]
-include::exercise1.0.adoc[]
-include::exercise1.1.adoc[]
-include::exercise1.2.adoc[]
-include::exercise1.3.adoc[]
-include::exercise1.4.adoc[]
-include::exercise1.5.adoc[]
-include::exercise2.0.adoc[]
-include::exercise2.1.adoc[]
-include::exercise2.2.adoc[]
-include::exercise2.3.adoc[]
-include::exercise3.0.adoc[]
-include::exercise3.1.adoc[]
-include::exercise3.2.adoc[]
-include::wrapup.adoc[]
 

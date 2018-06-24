@@ -1,6 +1,6 @@
 
-:icons: font
-:imagesdir: images
+include::header.adoc[]
+
 
 :win_feature_url: http://docs.ansible.com/ansible/latest/win_feature_module.html
 :win_service_url: http://docs.ansible.com/ansible/latest/win_service_module.html

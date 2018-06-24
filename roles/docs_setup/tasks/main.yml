@@ -15,31 +15,27 @@
 - name: Copy content to server
   copy:
     src: content/ansible_tower_windows/
-    dest: /tmp/content
+    dest: /usr/share/nginx/html/
   register: copycontent
 
-- name: Copy images content to server
-  copy:
-    src: content/ansible_tower_windows/images/
-    dest: /usr/share/nginx/html/images
-
 - name: Build HTML Docs
-  command: asciidoc -d book -v -o index.html index.adoc
+  command: asciidoc -d book -v -o {{ item }}.html {{ item }}.adoc
   args:
-    chdir: /tmp/content/
-  when: copycontent.changed
-
-- name: Build PDF Docs
-  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
-  args:
-    chdir: /tmp/content/
-  when: copycontent.changed
-
-- name: Copy content to server
-  copy:
-    src: /tmp/content/{{ item }}
-    dest: /usr/share/nginx/html/{{ item }}
-    remote_src: yes
+    chdir: /usr/share/nginx/html/
   with_items:
-    - index.html
-    - aww.pdf
+    - index
+    - wrapup
+    - exercise1
+    - exercise2
+    - exercise3
+    - exercise4
+    - exercise5
+    - exercise6
+#  when: copycontent.changed
+
+#- name: Build PDF Docs
+#  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
+#  args:
+#    chdir: /tmp/content/
+#  when: copycontent.changed
+

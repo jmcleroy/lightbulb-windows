@@ -1,5 +1,4 @@
-:icons: font
-:imagesdir: images
+include::header.adoc[]
 
 
 = Exercise 2 - Ad-hoc commands in Tower

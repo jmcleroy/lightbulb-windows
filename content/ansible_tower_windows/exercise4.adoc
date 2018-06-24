@@ -1,5 +1,5 @@
-:icons: font
-:imagesdir: images
+include::header.adoc[]
+
 
 
 = Exercise 4- Creating and Running a Job Template
