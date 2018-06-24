@@ -44,7 +44,7 @@
     win_shortcut:
       src: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'
       dest: '%UserProfile%\Desktop\Ansible Tower.lnk'
-      args: --new-window http://s1-tower.{{ dns_domain_name }}/
+      args: --new-window http://s{{ user }}-tower.{{ dns_domain_name }}/
       directory: '%ProgramFiles(x86)%\Google\Chrome\Application'
       icon: '%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe,0'
 
