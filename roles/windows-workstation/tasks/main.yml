@@ -80,6 +80,30 @@
       chdir: C:\Users\{{ user }}\Documents
       creates: C:\Users\{{ user }}\Documents\{{ user }}
 
+  - name: Create Readme file to intialize the repo
+    win_copy:
+      dest: C:\Users\{{ user }}\Documents\{{ user }}\README.md
+      content: ""
+    register: initialize
+
+  - name: Add initial file
+    win_command: git add C:\Users\{{ user }}\Documents\{{ user }}\README.md
+    args:
+      chdir: C:\Users\{{ user }}\Documents\{{ user }}
+    #when: initialize.changed
+
+  - name: Commit initial file
+    win_command: git commit -m "Initialize"
+    args:
+      chdir: C:\Users\{{ user }}\Documents\{{ user }}
+    #when: initialize.changed
+
+  - name: Push initial commit
+    win_command: git push
+    args:
+      chdir: C:\Users\{{ user }}\Documents\{{ user }}
+    #when: initialize.changed
+
   - name: Set Chrome to default Browser
     win_shell: Set-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{{ item }}\UserChoice -name ProgId ChromeHTML
     with_items:
