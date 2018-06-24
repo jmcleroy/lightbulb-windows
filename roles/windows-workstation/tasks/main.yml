@@ -74,6 +74,12 @@
   - name: Set git password
     win_shell: cmdkey /generic:LegacyGeneric:target=git:https://{{ user }}@gitlab.{{ dns_domain_name }} /user:{{ user }} /pass:"{{ users_password }}"
 
+  - name: Copy .gitconfig to user directory
+    win_copy:
+      src: C:\Windows\.gitconfig
+      dest: C:\Users\{{ user }}\.gitconfig
+      remote_src: True
+
   - name: Clone student git repo
     win_command: git clone https://gitlab.ansibleworkshop.com/{{ user }}/{{ user }}.git
     args:
@@ -103,6 +109,11 @@
     args:
       chdir: C:\Users\{{ user }}\Documents\{{ user }}
     when: initialize.changed
+
+  - name: Configure VS Code Settings File
+    win_copy:
+      src: files/settings.json
+      dest: C:\Users\student2\AppData\Roaming\Code\User\settings.json
 
   - name: Set Chrome to default Browser
     win_shell: Set-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{{ item }}\UserChoice -name ProgId ChromeHTML
