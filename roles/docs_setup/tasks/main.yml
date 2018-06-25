@@ -31,7 +31,8 @@
     - exercise4
     - exercise5
     - exercise6
-#  when: copycontent.changed
+    - exercise7
+  when: copycontent.changed
 
 #- name: Build PDF Docs
 #  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc

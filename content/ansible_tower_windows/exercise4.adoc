@@ -36,7 +36,7 @@ Complete the form using the following values
 |JOB TYPE|Run
 |INVENTORY|Ansible Workshop Inventory
 |PROJECT|Ansible Workshop Project
-|PLAYBOOK|iis-basic-playbook/site.yml
+|PLAYBOOK|iis-basic/install_iis.yml
 |MACHINE CREDENTIAL|Student Account
 |LIMIT|Windows
 |OPTIONS
