@@ -20,7 +20,7 @@ To begin we will setup our directory structure for storing our playbooks. This d
 A playbook can have multiple plays and a play
 can have one or multiple tasks.  The goal of a *play* is to map a group of hosts.  The goal of a *task* is to implement modules against those hosts.
 
-For our first playbook, we are only going to write one play and two tasks.
+For our first playbook, we are only going to write 1 play and 3 tasks.
 
 All of our playbooks will be stored in a single git *repository*. Multiple users can use the same repository and git will manage file conflicts and versions.
 
@@ -71,7 +71,7 @@ Now that you are editing `install_iis.yml`, let's begin by defining the play and
 ----
 ---
 - name: install the iis web service
-  hosts: web
+  hosts: all
 
 ----
 
@@ -79,7 +79,7 @@ Now that you are editing `install_iis.yml`, let's begin by defining the play and
 
 - `---` Defines the beginning of YAML
 - `name: install the iis web service` This describes our play
-- `hosts: web` Defines the host group in your inventory on which this play will run against
+- `hosts: all` Defines the host group in your inventory on which this play will run against
 
 
 
@@ -102,6 +102,11 @@ If you want to see the entire playbook for reference, skip to the bottom of this
      win_service:
        name: W3Svc
        state: started
+
+   - name: Create website index.html
+     win_copy:
+       content: "{{ iis_test_message }}"
+       dest: C:\Inetpub\wwwroot\index.html
 ----
 
 
@@ -135,6 +140,17 @@ win_service:
 is the preferred way of controlling services on remote hosts.  link:{win_service_url}[Click here] to learn more
 about the *win_service* module.
 
+[source,bash]
+----
+win_copy:
+  content: "{{ iis_test_message }}"
+  dest: C:\Inetpub\wwwroot\index.html
+----
+
+
+- In this task, we use the win_copy module to create a file with specific contents in it.  We are getting a little more
+complex here as we are using a variable to source the contents.  We won't go into the variables just yet, since they 
+will be showcased in a later lesson.
 
 
 == Section 4: Saving your Playbook
@@ -176,8 +192,7 @@ like this.  Take note of the spacing and alignment.
 ----
 ---
 - name: install the iis web service
-  hosts: web
-
+  hosts: all
 
   tasks:
     - name: install iis
@@ -189,4 +204,9 @@ like this.  Take note of the spacing and alignment.
       win_service:
         name: W3Svc
         state: started
+
+    - name: Create website index.html
+      win_copy:
+        content: "{{ iis_test_message }}"
+        dest: C:\Inetpub\wwwroot\index.html
 ----

@@ -4,11 +4,15 @@ include::header.adoc[]
 
 = Exercise 4- Creating and Running a Job Template
 
-TODO - Update below for IIS/Windows ...
-
-
 A job template is a definition and set of parameters for running an Ansible job.
 Job templates are useful to execute the same job many times.
+
+== Syncing your Project
+
+Before you can create a job template with a new playbook, you must first sync your Project so that Tower knows about it.
+To do this, click on *PROJECTS* and then click the cloud icon next to your project.  Once this is complete, you can create the job template.
+
+image::4-project-sync.png[title="Project Sync"]
 
 
 == Creating a Job Template
@@ -33,22 +37,22 @@ Complete the form using the following values
 |INVENTORY|Ansible Workshop Inventory
 |PROJECT|Ansible Workshop Project
 |PLAYBOOK|iis-basic-playbook/site.yml
-|MACHINE CREDENTIAL|Ansible Workshop Credential
-|LIMIT|web
+|MACHINE CREDENTIAL|Student Account
+|LIMIT|Windows
 |OPTIONS
 a|
-- [*] Enable Privilege Escalation
+- [*] Use Fact Cache
 |===
 
 
 
-image::at_jt_detail.png[title="Job Template Form",width=1000]
+image::4-create-job-template.png[title="Create Job Template",width=1000]
 
 
 
 === Step 4:
 
-Click SAVE image:at_save.png[Save] and then select ADD SURVEY image:at_addsurvey.png[Add]
+Click SAVE image:at_save.png[Save] and then select ADD SURVEY image:at_add_survey.png[Add]
 
 === Step 5:
 
@@ -65,7 +69,7 @@ Complete the survey form with following values
 
 
 
-image::at_survey_detail.png[title="Survey Form",width=1000]
+image::4-survey.png[title="Survey Form",width=1000]
 
 
 
@@ -107,7 +111,7 @@ When prompted, enter your desired test message
 
 
 
-image::at_survey_prompt.png[title="Survey Prompt",width=1000]
+image::4-survey-prompt.png[title="Survey Prompt",width=1000]
 
 
 
@@ -124,34 +128,25 @@ your job such as who launched it, what playbook it's running, what the status is
 
 
 
-image::at_job_status.png[title="Job Summary",width=1000]
+image::4-job-summary-details.png[title="Job Summary"]
 
 
 
-Scrolling down, you will be able to see details on the play and each task in the playbook.
+Next you will be able to see details on the play and each task in the playbook.
 
 
 
-image::at_job_tasklist.png[title="Play and Task Details",width=1000]
-
-
-
-To the right, you can view standard output; the same way you could if you were running Ansible Core
-from the command line.
-
-
-
-image::at_job_stdout.png[title="Job Standard Output",width=1000]
+image::4-job-summary-output.png[title="Play and Task Output"]
 
 
 
 === Step 6:
 
-Once your job is sucessful, navigate to your new website
+Once your job is sucessful, navigate to your new website (replace # with your student number)
 
 [source,bash]
 ----
-http://s#win1.ansibleworkshop.com
+http://s#-win1.ansibleworkshop.com
 ----
 
 
@@ -159,13 +154,13 @@ If all went well, you should see something like this, but with your own custom m
 
 
 
-image::at_web_tm.png[title="New Website with Personalized Test Message",width=1000]
+image::4-website-output.png[title="New Website with Personalized Test Message",width=1000]
 
+== Extra Credit
 
-
+Now that you have IIS Installed, create a new playbook called 'remove_iis.yml' to stop and remove IIS.
 
 
 == End Result
 At this point in the workshop, you've experienced the core functionality of Ansible Tower.  But wait... there's more!
-You've just begun to explore the possibilities of Ansible Core and Tower.  Take a look at the resources page in this guide
-to explore some more features.
+You've just begun to explore the possibilities of Ansible Tower.  The next few lessons will help you move beyond a basic playbook.
