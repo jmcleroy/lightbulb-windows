@@ -113,7 +113,7 @@
   - name: Configure VS Code Settings File
     win_copy:
       src: files/settings.json
-      dest: C:\Users\student2\AppData\Roaming\Code\User\settings.json
+      dest: C:\Users\{{ user }}\AppData\Roaming\Code\User\settings.json
 
   - name: Set Chrome to default Browser
     win_shell: Set-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{{ item }}\UserChoice -name ProgId ChromeHTML
