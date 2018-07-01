@@ -118,7 +118,7 @@ OK, IIS is installed now so let's be certain it is started using the `service` m
 
 |===
 |MODULE |win_service
-|ARGUMENTS|name=name=W3Svc state=started
+|ARGUMENTS|name=W3Svc state=started
 |MACHINE CREDENTIAL|Student Account
 |===
 
@@ -129,7 +129,7 @@ Finally, let's clean up after ourselves.  First, stop the IIS service.
 
 |===
 |MODULE |win_service
-|ARGUMENTS|name=name=W3Svc state=stopped
+|ARGUMENTS|name=W3Svc state=stopped
 |MACHINE CREDENTIAL|Student Account
 |===
 
