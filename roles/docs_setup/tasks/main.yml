@@ -34,6 +34,12 @@
     - exercise7
   when: copycontent.changed
 
+- name: Copy template to server
+  template:
+    src: templates/users.html.j2
+    dest: /usr/share/nginx/html/
+
+
 #- name: Build PDF Docs
 #  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
 #  args:
