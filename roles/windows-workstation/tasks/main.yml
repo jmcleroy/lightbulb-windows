@@ -110,6 +110,11 @@
       chdir: C:\Users\{{ user }}\Documents\{{ user }}
     when: initialize.changed
 
+  - name: Create VS Code Settings Directory
+    file:
+      path: C:\Users\{{ user }}\AppData\Roaming\Code\User\
+      state: directory
+
   - name: Configure VS Code Settings File
     win_copy:
       src: files/settings.json
