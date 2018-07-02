@@ -2,18 +2,12 @@ include::header.adoc[]
 
 
 = Exercise 7 - Using Ansible for Windows Patching
-Walk through a patching process including things such as:
-
-* Downloading packages before patching window
-* Scheduling patching - How to group nodes
-* Notification on failure of patching
-* Review/Confirmation of patches deployed
 
 == Section 1 - Creating your Playbook
 
 The `win_updates` module is used to either check for or to install Windows Updates.  The module utilizes the built in Windows Update service to function.
 This means that you still will need a backend system like WSUS or the online Windows Update Servers to download updates from.
-If your server's Windows Update configuration is set to automatically download but not install, you can utilize the module to stage updates by telling it to `search` for updates.
+If your server's Windows Update configuration is set to automatically download but not install, you can also utilize the module to stage updates by telling it to `search` for updates.
 We also have the ability to whitelist or blacklist updates.  For example we could tell it to only install one particular security update instead of every update available.
 
 
@@ -27,11 +21,9 @@ In the Explorer accordion you should have a 'student#' section where you previou
 
 image::3-vscode-create-folders.png[title="Student Playbooks",width=1000]
 
-Create a folder called *win_updates* and a file called `site.yml`
-
 Hover over the 'student#' section and click on the 'New Folder' button
 
-Type win_updates and hit enter.  Then click on that folder so it is selected.
+Type `win_updates` and hit enter.  Then click on that folder so it is selected.
 
 Hover over the 'student#' section again and click on the 'New File' button.
 
@@ -138,22 +130,24 @@ Complete the survey form with following values
 |DESCRIPTION|Which Categories to install?
 |ANSWER VARIABLE NAME|categories
 |ANSWER TYPE|Multi Choice (Multi Select)
-a|MULTIPLE CHOICE OPTIONS|
-Application
-Connectors
-CriticalUpdates
-DefinitionUpdates
-DeveloperKits
-FeaturePacks
-Guidance
-SecurityUpdates
-ServicePacks
-Tools
-UpdateRollups
-Updates
-a|DEFAULT ANSWER|
-CriticalUpdates
-SecurityUpdates
+|MULTIPLE CHOICE OPTIONS
+a|
+- Application
+- Connectors
+- CriticalUpdates
+- DefinitionUpdates
+- DeveloperKits
+- FeaturePacks
+- Guidance
+- SecurityUpdates
+- ServicePacks
+- Tools
+- UpdateRollups
+- Updates
+|DEFAULT ANSWER
+a|
+- CriticalUpdates
+- SecurityUpdates
 |===
 
 Now add another field.
@@ -163,11 +157,11 @@ Now add another field.
 |DESCRIPTION|If the server needs to reboot, then do so after install
 |ANSWER VARIABLE NAME|reboot_server
 |ANSWER TYPE|Multi Choice (Single Select)
-a|MULTIPLE CHOICE OPTIONS|
-Yes
-No
-a|DEFAULT ANSWER|
-Yes
+|MULTIPLE CHOICE OPTIONS
+a|
+- Yes
+- No
+|DEFAULT ANSWER|Yes
 |===
 
 image::6-survey.png[title="Survey Form",width=1000]
