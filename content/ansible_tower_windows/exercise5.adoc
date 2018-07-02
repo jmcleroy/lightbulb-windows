@@ -141,7 +141,7 @@ After that, you will define a task to start the IIS service.
 === Step 1:
 Create a `templates` directory in your project directory and create a template as follows:
 
-Ensure your *iis_advanced folder is highlighted and then hover over the 'student#' section and click on the 'New Folder' button
+Ensure your *iis_advanced folder* is highlighted and then hover over the 'student#' section and click on the 'New Folder' button
 
 Type templates and hit enter.  Then click on that folder so it is selected.
 
