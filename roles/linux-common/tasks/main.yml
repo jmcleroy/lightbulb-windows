@@ -1,25 +1,23 @@
 ---
+- command: find /etc/sysconfig/network-scripts/ -type f -name "ifcfg-e*"
+  register: eths
+
 - name: Remove PeerDNS=yes entry
   lineinfile:
-    path: /etc/sysconfig/network-scripts/ifcfg-ens192
+    path: "{{ eths.stdout }}"
     regexp: '^PEERDNS=yes'
     line: ''
+  notify: restart NetworkManager
 
 - name: set DNS resolution in ifcfg file
   blockinfile:
-    dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+    dest: "{{ eths.stdout }}"
     block: |
       DNS1={{ dns_server }}
       DNS2=8.8.8.8
       DOMAIN="{{dns_domain_name}} ec2.internal"
       PEERDNS=no
-  register: nm_resolv
-
-- name: restart NetworkManager service
-  service:
-    name: NetworkManager
-    state: restarted
-  when: nm_resolv.changed
+  notify: restart NetworkManager
 
 - name: Install packages
   package:
