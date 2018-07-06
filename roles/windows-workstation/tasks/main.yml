@@ -111,7 +111,7 @@
     when: initialize.changed
 
   - name: Create VS Code Settings Directory
-    file:
+    win_file:
       path: C:\Users\{{ user }}\AppData\Roaming\Code\User\
       state: directory
 
