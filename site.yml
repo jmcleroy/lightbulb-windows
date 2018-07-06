@@ -35,7 +35,6 @@
 - name: Configure GitLab Host
   hosts: gitlab
   become: True
-  remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
@@ -50,7 +49,6 @@
   hosts: gitlab
   become: True
   gather_facts: True
-  remote_user: "{{ root_user }}"
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
@@ -61,7 +59,6 @@
 - name: Configure Ansible Host
   hosts: tower
   become: True
-  remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
@@ -85,7 +82,6 @@
 - name: Configure Docs Host
   hosts: docs
   become: True
-  remote_user: "{{ root_user }}"
   gather_facts: True
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
