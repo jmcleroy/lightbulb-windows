@@ -2,5 +2,5 @@
 *.log
 instructor_inventory.txt
 *instances.txt
-vars/custom.yml
+vars/custom*
 roles/ansible-tower/files/tower_license.json
