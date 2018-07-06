@@ -81,7 +81,7 @@
       remote_src: True
 
   - name: Clone student git repo
-    win_command: git clone https://gitlab.ansibleworkshop.com/{{ user }}/{{ user }}.git
+    win_command: git clone https://gitlab.{{ dns_domain_name }}/{{ user }}/{{ user }}.git
     args:
       chdir: C:\Users\{{ user }}\Documents
       creates: C:\Users\{{ user }}\Documents\{{ user }}
@@ -127,7 +127,7 @@
       - https
 
   become: yes
-  become_user: "ansibleworkshop\\{{ user_prefix }}{{ inventory_hostname | regex_replace('[^0-9]', '') }}"
+  become_user: "{{ dns_domain_name_short }}\\{{ user_prefix }}{{ inventory_hostname | regex_replace('[^0-9]', '') }}"
   become_method: runas
 
 #- include_tasks: ansible.yml
