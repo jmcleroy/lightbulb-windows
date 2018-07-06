@@ -383,7 +383,7 @@
     instance_tags:
       Name: "{{ name_prefix }}-docs"
       App: AnsibleWorkshop
-    image: "{{ ec2_rhel_ami }}"
+    image: "{{ ec2_centos_ami }}"
     wait: true
     region: "{{ ec2_region }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
@@ -557,7 +557,7 @@
 - name: Docs | Add new instance to host group
   add_host:
     hostname: 'docs'
-    ansible_user: "{{ root_user }}"
+    ansible_user: "{{ centos_root_user }}"
     ansible_ssh_private_key_file: "{{ ec2_key_file }}"
     ansible_host: "{{ item.public_ip }}"
     private_ip: "{{ item.private_ip }}"

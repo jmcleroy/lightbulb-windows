@@ -31,6 +31,7 @@ tower_ldap_search_dn: "CN=Users,DC=ansibleworkshop,DC=com"
 # Root user (ec2-user for AWS)
 root_user: root
 root_password: MyPassw0rd21
+centos_root_user: centos
 
 # Needed for reverse lookup DNS setup
 ptr_zone_name: "1.0.10.in-addr.arpa"
