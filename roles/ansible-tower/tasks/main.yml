@@ -62,26 +62,6 @@
     - pywinrm[kerberos]
     - pywinrm[credssp]
 
-- command: find /etc/sysconfig/network-scripts/ -type f -name "ifcfg-e*"
-  register: eths
-
-# Set DNS name via network manager
-- name: set DNS resolution in ifcfg file 
-  blockinfile:
-    dest: "{{ eths.stdout }}"
-    block: |
-      DNS1={{ dns_server }}
-      DNS2=8.8.8.8
-      DOMAIN="{{dns_domain_name}} ec2.internal"
-      PEERDNS=no
-  register: nm_resolv
-
-- name: restart NetworkManager service
-  service: 
-    name: NetworkManager 
-    state: restarted
-  when: nm_resolv.changed
-
 - name: Install dependencies for domain join 
   package:
     name: "{{ item }}"
