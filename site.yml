@@ -14,7 +14,7 @@
 
 - name: Configure Active Directory Domain Controller
   hosts: windows_domain_controllers
-  gather_facts: no
+  gather_facts: yes
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
@@ -50,6 +50,7 @@
   hosts: gitlab
   become: True
   gather_facts: True
+  remote_user: "{{ root_user }}"
   vars_files:
     - [ 'vars/custom.yml', 'vars/main.yml' ]
   tags:
