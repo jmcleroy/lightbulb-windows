@@ -2,8 +2,6 @@
 # defaults file for ansible-tower
 ansible_devel: false
 dns_domain_name: "example.com"
-# Grab the private IP of your windows DNS for your lab dns server
-dns_server: "{{ hostvars['windc'].private_ip }}"
 
 # AD login info
 authconfig_options:
