@@ -61,11 +61,14 @@
     - pywinrm>=0.2.2
     - pywinrm[kerberos]
     - pywinrm[credssp]
- 
+
+- command: find /etc/sysconfig/network-scripts/ -type f -name "ifcfg-e*"
+  register: eths
+
 # Set DNS name via network manager
 - name: set DNS resolution in ifcfg file 
   blockinfile:
-    dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+    dest: "{{ eths.stdout }}"
     block: |
       DNS1={{ dns_server }}
       DNS2=8.8.8.8
