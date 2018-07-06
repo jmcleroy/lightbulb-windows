@@ -486,6 +486,7 @@
     ansible_port: 5985
     ansible_user: "{{ azure_admin_user }}"
     ansible_password: "{{ azure_admin_pass }}"
+    ansible_become_password: "{{ users_password }}"
     ansible_connection: "winrm"
     ansible_winrm_transport: "ntlm"
     ansible_winrm_server_cert_validation: "ignore"
