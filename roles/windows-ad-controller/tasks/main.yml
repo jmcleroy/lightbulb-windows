@@ -1,7 +1,8 @@
 ---
-- name: Sleep 3 minutes before attempting to install... sigh...
-  pause:
-    minutes: 3
+#- name: Sleep 3 minutes before attempting to install... sigh...
+#  pause:
+#    minutes: 3
+#  when: dns_domain_name not in ansible_domain
 
 - name: Install AD-Domain-Services
   win_feature:
@@ -72,42 +73,67 @@
 - name: Create DNS Domain
   win_domain:
     dns_domain_name: "{{ dns_domain_name }}"
-    safe_mode_password: "{{ domain_admin_password }}"
+    safe_mode_password: "{{ ansible_password }}"
   register: windomain
+
+#- name: Sleep 1 minutes after reboot from DNS configuration
+#  pause:
+#    minutes: 1
+#  when: windomain.reboot_required
+
+
+# Every AMI I have tested has an issue, once you create the DNS Domain, all auth services stop.
+# You can RDP in, but you can't WinRM.  So we just restart it through AWS itself
+- name: If EC2, reboot the VM manually (ya it sucks)
+  ec2:
+    instance_tags:
+        Name: "{{ name_prefix }}-windc"
+    region: "{{ ec2_region }}"
+    state: restarted
+  when:
+    - instance_loc == 'ec2'
+    - windomain.reboot_required
+  delegate_to: localhost
+
+- name: If EC2, wait for it to come back up
+  wait_for_connection:
+    delay: 20
+    timeout: 300
+  when:
+    - instance_loc == 'ec2'
+    - windomain.reboot_required
 
 - name: Reboot if needed
   win_reboot:
-  when: windomain.reboot_required
+  when:
+    - instance_loc != 'ec2'
+    - windomain.reboot_required
 
 # For some reason on a run after reboot I'm getting an error sometimes
 # Error message was MODULE FAILURE:
 # Exception calling \"Run\" with \"1\" argument(s): \"Exception calling \"Invoke\" with \"0\" argument(s): \"The running command \r\nstopped because the preference variable \"ErrorActionPreference\" or common parameter is set to Stop: The specified \r\nargument 'InstallDNS' was not recognized.
 # I added this sleep to see if it helps
-#- name: Sleep 3 minutes after reboot from DNS configuration
-#  pause:
-#    minutes: 3
-#  when: windomain.reboot_required
+- name: Sleep 2 minutes after reboot from DNS configuration
+  pause:
+    minutes: 2
+  when: windomain.reboot_required
 
-#- name: Ensure DNS services are started
-#  win_service:
-#    name: "{{ item }}"
-#    state: started
-#    start_mode: auto
-#  with_items:
-#    - dns
+- name: Ensure DNS services are started
+  win_service:
+    name: "{{ item }}"
+    state: started
+    start_mode: auto
+  with_items:
+    - dns
 
-#- name: Get current DNS zones
-#  win_shell: Get-DnsServerZone | Select ZoneName
-#  changed_when: false
-#  register: dnsserverzone
-#
-#- debug: var=dnsserverzone
-#
-#- debug: var=ptr_zone_cidr
-#
-#- name: Set Reverse Lookup Zone
-#  win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
-#  when: "ptr_zone_name not in dnsserverzone.stdout"
+- name: Get current DNS zones
+  win_shell: Get-DnsServerZone | Select ZoneName
+  changed_when: false
+  register: dnsserverzone
+
+- name: Set Reverse Lookup Zone
+  win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
+  when: "ptr_zone_name not in dnsserverzone.stdout"
 
 #- name: Ensure AD services are started - will fail if install not complete
 #  win_service:
@@ -203,20 +229,20 @@
 #- debug: var=arecords
 
 - name: Create A record for gitlab
-  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "gitlab" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['gitlab']['private_ip'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'gitlab' not in arecords.stdout"
 
 - name: Create A record for docs
-  win_shell: Add-DnsServerResourceRecordA -Name "docs" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['docs']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "docs" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['docs']['private_ip'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'docs' not in arecords.stdout"
 
 - name: Create A record for Towers
-  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-tower" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-tower']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-tower" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-tower']['private_ip'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'s' + item +'-tower' not in arecords.stdout"
   with_sequence: count={{ user_count }}
 
 - name: Create A record for Windows
-  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-win1" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-win1']['ansible_host'] }}" -TimeToLive 01:00:00 -AgeRecord
+  win_shell: Add-DnsServerResourceRecordA -Name "s{{ item }}-win1" -ZoneName "{{ dns_domain_name }}" -AllowUpdateAny -Ipv4Address "{{ hostvars['s' + item + '-win1']['private_ip'] }}" -TimeToLive 01:00:00 -AgeRecord
   when: "'s' + item +'-win1' not in arecords.stdout"
   with_sequence: count={{ user_count }}
 
@@ -239,7 +265,6 @@
   pause:
     minutes: 1
   when: windomain.changed
-
 
 - name: Add windows group
   win_domain_group:
@@ -264,7 +289,6 @@
     company: AnsibleByRedHat
     email: "Admin@{{ dns_domain_name }}"
     #path: ou=Users,dc=ansibleworkshop,dc=com
-
 
 - name: Add windows AD users
   win_domain_user:
