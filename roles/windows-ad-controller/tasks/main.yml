@@ -261,10 +261,10 @@
 #  when: "item not in ptr_records.stdout"
 #  with_items: "{{groups.all}}"
 
-- name: Sleep 60 seconds before adding windows group... sigh...
-  pause:
-    minutes: 1
-  when: windomain.changed
+#- name: Sleep 60 seconds before adding windows group... sigh...
+#  pause:
+#    minutes: 1
+#  when: windomain.changed
 
 - name: Add windows group
   win_domain_group:
