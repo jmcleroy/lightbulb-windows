@@ -11,19 +11,21 @@
 
 - name: Remove PeerDNS=yes entry
   lineinfile:
-    path: "{{ eths.stdout }}"
+    path: "{{ item }}"
     regexp: '^PEERDNS=yes'
     line: ''
+  with_items: "{{ eths.stdout_lines }}"
 
 - name: set DNS resolution in ifcfg file
   blockinfile:
-    dest: "{{ eths.stdout }}"
+    dest: "{{ item }}"
     block: |
       DNS1={{ dns_server }}
       DNS2=8.8.8.8
       DOMAIN="{{dns_domain_name}} ec2.internal"
       PEERDNS=no
   register: dnschange
+  with_items: "{{ eths.stdout_lines }}"
 
 - name: restart NetworkManager
   service:
