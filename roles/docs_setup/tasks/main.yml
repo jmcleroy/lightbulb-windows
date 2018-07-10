@@ -39,6 +39,15 @@
     src: templates/users.html.j2
     dest: /usr/share/nginx/html/users.html
 
+- name: Copy deck to server
+  file:
+    path: /usr/share/nginx/html/decks/
+    state: directory
+
+- name: Copy deck to server
+  copy:
+    src: decks/
+    dest: /usr/share/nginx/html/decks/
 
 #- name: Build PDF Docs
 #  command: asciidoctor -b pdf -d book -r asciidoctor-pdf -o aww.pdf index.adoc
