@@ -128,12 +128,12 @@
 
   - name: Remove EC2 Feedback Icon
     win_file:
-      path: C:\Users\student1\Desktop\EC2 Feedback.website
+      path: C:\Users\{{ user }}\Desktop\EC2 Feedback.website
       state: absent
 
   - name: Remove EC2 Website Icon
     win_file:
-      path: C:\Users\student1\Desktop\EC2 Microsoft Windows Guide.website
+      path: C:\Users\{{ user }}\Desktop\EC2 Microsoft Windows Guide.website
       state: absent
 
   become: yes
