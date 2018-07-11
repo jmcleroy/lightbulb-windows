@@ -76,12 +76,6 @@
     safe_mode_password: "{{ ansible_password }}"
   register: windomain
 
-#- name: Sleep 1 minutes after reboot from DNS configuration
-#  pause:
-#    minutes: 1
-#  when: windomain.reboot_required
-
-
 # Every AMI I have tested has an issue, once you create the DNS Domain, all auth services stop.
 # You can RDP in, but you can't WinRM.  So we just restart it through AWS itself
 - name: If EC2, reboot the VM manually (ya it sucks)
@@ -123,26 +117,6 @@
     zonename: "{{ ptr_zone_name }}"
     state: present
 
-#
-#- name: Promote to Domain Controller
-#  win_domain_controller:
-#    dns_domain_name: "{{ dns_domain_name }}"
-#    domain_admin_user: "administrator@{{ dns_domain_name }}"
-#    domain_admin_password: "{{ domain_admin_password }}"
-#    safe_mode_password: "{{ domain_admin_password }}"
-#    state: domain_controller
-#    log_path: c:\ansible_win_domain_controller.txt
-#  register: windc
-#
-#- name: Reboot if needed
-#  win_reboot:
-#  when: windc.reboot_required
-#
-#- name: Sleep 180 seconds before adding windows group... sigh...
-#  pause:
-#    minutes: 3
-#  when: windc.changed
-#
 - name: Ensure AD services are started - will fail if install not complete
   win_service:
     name: "{{ item }}"
@@ -188,11 +162,6 @@
 #- name: Get PTR Records for zone
 #  win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
 #  register: ptr_records
-
-#- debug: var=ptr_records
-#
-#- debug: msg="item = {{ item }}"
-#  with_items: "{{ groups.all }}"
 
 # Add-DnsServerResourceRecordPtr -Name "17" -ZoneName "1.168.192.in-addr.arpa" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "hostname.example.com"
 #- name: Set PTR Record for each host
