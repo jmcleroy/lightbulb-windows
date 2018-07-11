@@ -109,15 +109,6 @@
     - instance_loc != 'ec2'
     - windomain.reboot_required
 
-# For some reason on a run after reboot I'm getting an error sometimes
-# Error message was MODULE FAILURE:
-# Exception calling \"Run\" with \"1\" argument(s): \"Exception calling \"Invoke\" with \"0\" argument(s): \"The running command \r\nstopped because the preference variable \"ErrorActionPreference\" or common parameter is set to Stop: The specified \r\nargument 'InstallDNS' was not recognized.
-# I added this sleep to see if it helps
-- name: Sleep 2 minutes after reboot from DNS configuration
-  pause:
-    minutes: 2
-  when: windomain.reboot_required
-
 - name: Ensure DNS services are started
   win_service:
     name: "{{ item }}"
@@ -134,17 +125,6 @@
 - name: Set Reverse Lookup Zone
   win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
   when: "ptr_zone_name not in dnsserverzone.stdout"
-
-#- name: Ensure AD services are started - will fail if install not complete
-#  win_service:
-#    name: "{{ item }}"
-#    state: started
-#    start_mode: auto
-#  with_items:
-#    - adws
-#    - dns
-#    - kdc
-#    - netlogon
 
 #
 #- name: Promote to Domain Controller
@@ -176,20 +156,6 @@
     - dns
 #    - kdc
 #    - netlogon
-#
-#- name: Get current DNS zones
-#  win_shell: Get-DnsServerZone | Select ZoneName
-#  changed_when: false
-#  register: dnsserverzone
-
-#- debug: var=dnsserverzone
-
-#- name: Get A records for zone
-#  win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
-#  changed_when: false
-#  register: arecords
-#
-#- debug: var=arecords
 
 - name: Create DNS A record for gitlab
   win_ad_dnsrecord:
@@ -221,12 +187,6 @@
     state: present
   with_sequence: count={{ user_count }}
 
-#- name: Get A records for zone
-#  win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
-#  changed_when: false
-#  register: arecords
-#
-#- debug: var=arecords
 
 #- name: Get PTR Records for zone
 #  win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
@@ -242,11 +202,6 @@
 #  win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
 #  when: "item not in ptr_records.stdout"
 #  with_items: "{{groups.all}}"
-
-#- name: Sleep 60 seconds before adding windows group... sigh...
-#  pause:
-#    minutes: 1
-#  when: windomain.changed
 
 - name: Add windows group
   win_domain_group:
@@ -289,23 +244,6 @@
     company: AnsibleByRedHat
     email: "{{user_prefix}}{{ item }}@{{ dns_domain_name }}"
   with_sequence: count="{{ user_count }}"
-
-#- name: Get current DNS search string
-#  win_shell: Get-DnsClientGlobalSetting | Select SuffixSearchList
-#  changed_when: false
-#  register: suffixsearchlist
-
-#- debug: var=suffixsearchlist
-
-#- name: Set DNS search string
-#  win_shell: Set-DnsClientGlobalSetting -SuffixSearchList {{ dns_domain_name }}, ec2.internal
-#  when: "dns_domain_name not in suffixsearchlist.stdout"
-
-#- name: Set DNS search string
-#  win_dsc:
-#    resource_name: xDnsClientGlobalSetting
-#    IsSingleInstance: 'Yes'
-#    SuffixSearchList: ["{{ dns_domain_name }}", 'ec2.internal']
 
 - name: Get current DNS search string
   win_shell: Get-DnsClientGlobalSetting | Select SuffixSearchList
