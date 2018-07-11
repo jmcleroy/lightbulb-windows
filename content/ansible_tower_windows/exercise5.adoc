@@ -255,7 +255,7 @@ Now let's take a second look to make sure everything looks the way you intended.
 [source,bash]
 ----
 ---
-- hosts: windows
+- hosts: Windows
   name: This is a play within a playbook
   vars:
     iis_sites:
